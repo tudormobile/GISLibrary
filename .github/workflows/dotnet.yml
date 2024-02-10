@@ -11,8 +11,9 @@ on:
   workflow_dispatch:
 
 jobs:
+  
   build:
-
+    name: Build, Test, Package, Document
     runs-on: ubuntu-latest
 
     steps:
@@ -29,5 +30,18 @@ jobs:
       run: |
         dotnet tool update -g docfx
         docfx docs/docfx.json
-        
+
+# Upload artifacts
+    - name: Upload packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: Packages
+        path: src/**/Release/*.nupkg
+        if-no-files-found: ignore        
       
+    - name: Upload documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: Documentation
+        path: docs/_site
+        if-no-files-found: ignore        
