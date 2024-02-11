@@ -20,4 +20,13 @@
     <ProjectReference Include="..\GISLibrary\GISLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="nys_counties.geojson">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="test.geojson">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
