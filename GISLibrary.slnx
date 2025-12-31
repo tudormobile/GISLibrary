@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/GISLibrary.Tests/GISLibrary.Tests.csproj" />
+  <Project Path="src/GISLibrary/GISLibrary.csproj" />
+</Solution>

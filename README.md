@@ -1,7 +1,14 @@
 # GISLibrary
+
+[![Build, Test, and Deploy](https://github.com/tudormobile/GISLibrary/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/tudormobile/GISLibrary/actions/workflows/dotnet.yml)  
+
+Copyright(C)2026 Bill Tudor  
+
 Tools for accessing and manipulating Geographic information system (GIS) data.  
 
-[![dotnet](https://github.com/tudormobile/GISLibrary/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/tudormobile/GISLibrary/actions/workflows/dotnet.yml)
-
-##### Copyright(C) Tudormobile LLC
+### Quick Start
+```cs
+using Tudormobile.GISLibrary;
+using Tudormobile.GeoJSON;
+```
 

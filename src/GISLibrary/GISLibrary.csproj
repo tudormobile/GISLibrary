@@ -1,32 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Tudormobile.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <RootNamespace>Tudormobile.GIS</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <MajorMinorVer>1.0</MajorMinorVer>
-    <BuildVer>$([System.DateTime]::Now.ToString('yyMM'))</BuildVer>
-    <RevVer>$([System.DateTime]::Now.ToString('dd'))</RevVer>
-    <AssemblyVersion>$(MajorMinorVer).$(BuildVer).100$(RevVer)</AssemblyVersion>
-    <FileVersion>$(MajorMinorVer).$(BuildVer).100$(RevVer)</FileVersion>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <PackageVersion>$(MajorMinorVer).$(BuildVer)</PackageVersion>
+  <PropertyGroup>
     <Authors>WH Tudor</Authors>
     <Title>GIS Library</Title>
+    <Product>Tudormobile GIS Library</Product>
     <Description>Tools for accessing and manipulating Geographic information system (GIS) data</Description>
-    <Copyright>COPYRIGHT(C) TUDORMOBILE LLC</Copyright>
+    <Copyright>COPYRIGHT(C)2026 BILL TUDOR</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>gis;geo;geojson</PackageTags>
+    <PackageProjectUrl>https://tudormobile.github.io/GISLibrary/</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/tudormobile/GISLibrary/releases</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/tudormobile/GISLibrary</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-
   <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\..\docs\README.md" Pack="true" PackagePath="\" />
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
   </ItemGroup>
-
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
 </Project>

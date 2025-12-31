@@ -1,11 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tudormobile.GISLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Tudormobile.GISLibrary.Tests
 {
@@ -20,8 +13,8 @@ namespace Tudormobile.GISLibrary.Tests
 
             var target = new GeoMultiPolygon(v2);
             Assert.AreEqual(GeometryType.MultiPolygon, target.GeometryType);
-            Assert.AreEqual(1, target.Polygons.Length);
-            Assert.AreEqual(2, target.Polygons[0].Length);
+            Assert.HasCount(1, target.Polygons);
+            Assert.HasCount(2, target.Polygons[0]);
         }
 
         [TestMethod]
@@ -29,7 +22,7 @@ namespace Tudormobile.GISLibrary.Tests
         {
             var target = new GeoMultiPolygon();
             Assert.AreEqual(GeometryType.MultiPolygon, target.GeometryType);
-            Assert.AreEqual(0, target.Polygons.Length);
+            Assert.IsEmpty(target.Polygons);
         }
     }
 }
