@@ -1,12 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tudormobile.GISLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Text.Json.Nodes;
-using System.Diagnostics;
 
 namespace Tudormobile.GISLibrary.Tests
 {
@@ -24,7 +17,7 @@ namespace Tudormobile.GISLibrary.Tests
 
             var actual = GeometryBuilder.FromJson(jo!.ToString());
             Assert.AreEqual(GeometryType.MultiPolygon, actual.GeometryType);
-            Assert.AreEqual(27, ((GeoMultiPolygon)actual).Polygons.Length);
+            Assert.HasCount(27, ((GeoMultiPolygon)actual).Polygons);
         }
 
         [TestMethod, DeploymentItem("test.geojson")]

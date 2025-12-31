@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
+﻿using System.Numerics;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace Tudormobile.GISLibrary
 {
@@ -24,9 +19,9 @@ namespace Tudormobile.GISLibrary
             var jo = JsonObject.Parse(json);
             if (jo != null)
             {
-                foreach (var feature in jo["features"].AsArray())
+                foreach (var feature in jo["features"]?.AsArray()!)
                 {
-                    yield return new GeometryFeature(propertyMapFromNode(feature["properties"]), geoObjectFromNode(feature["geometry"]));
+                    yield return new GeometryFeature(propertyMapFromNode(feature!["properties"]), geoObjectFromNode(feature["geometry"]));
 
                 }
             }
