@@ -25,6 +25,11 @@ jobs:
       with:
         dotnet-version: 10.0.x
 
+    - name: Setup GitVersion
+      uses: gittools/actions/gitversion/setup@v4
+      with:
+        versionSpec: '6.4.x'
+
     - name: Determine Version
       id: version_step # step id used as a reference for output values
       uses: gittools/actions/gitversion/execute@v4

@@ -3,7 +3,7 @@
 namespace Tudormobile.GeoJSON.Tests;
 
 [TestClass]
-public class GeoJSONGeometeryTests
+public class GeoJSONGeometryTests
 {
     [TestMethod]
     public void GeoJSONPoint_ConstructWithPosition()
