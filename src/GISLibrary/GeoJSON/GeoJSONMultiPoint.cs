@@ -40,6 +40,11 @@ public record GeoJSONMultiPoint : GeoJSONCoordinates
 
     internal override void WriteCoordinatesTo(Utf8JsonWriter writer)
     {
-        throw new NotImplementedException();
+        writer.WriteStartArray();
+        foreach (var point in Points)
+        {
+            point.WriteCoordinatesTo(writer);
+        }
+        writer.WriteEndArray();
     }
 }
