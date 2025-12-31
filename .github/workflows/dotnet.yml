@@ -43,6 +43,7 @@ jobs:
       run: dotnet build -c Release
 
     - name: Unit Test Annotations
+      shell: pwsh
       run: |
         dotnet tool update -g dotnet-Coverage
         dotnet tool update -g dotnet-reportgenerator-globaltool
