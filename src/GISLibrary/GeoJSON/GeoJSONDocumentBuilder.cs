@@ -1,11 +1,16 @@
-﻿namespace Tudormobile.GeoJSON;
+﻿using Tudormobile.GIS;
 
+namespace Tudormobile.GeoJSON;
+
+/// <inheritdoc/>
 internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
 {
     private readonly List<Func<IGeoJSONFeatureBuilder, IGeoJSONFeatureBuilder>> _features = [];
 
+    /// <inheritdoc/>
     List<(string, object)> IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>.Properties => base._properties;
 
+    /// <inheritdoc/>
     List<(string, object)> IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>.Objects => base._objects;
 
     /// <inheritdoc/>
@@ -55,10 +60,24 @@ internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
     }
 }
 
+/// <summary>
+/// Defines a builder interface for constructing GeoJSON documents with features and geometry objects.
+/// </summary>
+/// <remarks>This interface extends both generic and GeoJSON-specific builder interfaces, enabling fluent
+/// composition of GeoJSON documents. Implementations typically allow chaining of feature and geometry additions to
+/// incrementally build a complete GeoJSON structure.</remarks>
 public interface IGeoJSONDocumentBuilder
     : IBuilder<GeoJSONDocument>,
       IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>
 {
+    /// <summary>
+    /// Adds a new feature to the GeoJSON document using the specified builder function.
+    /// </summary>
+    /// <remarks>The provided builder function is invoked to configure the feature before it is added to the
+    /// document. This method supports fluent chaining for building complex GeoJSON documents.</remarks>
+    /// <param name="value">A delegate that receives an <see cref="IGeoJSONFeatureBuilder"/> and returns a configured feature builder
+    /// representing the feature to add. Cannot be null.</param>
+    /// <returns>The current <see cref="IGeoJSONDocumentBuilder"/> instance, enabling method chaining.</returns>
     IGeoJSONDocumentBuilder AddFeature(Func<IGeoJSONFeatureBuilder, IGeoJSONFeatureBuilder> value);
 }
 

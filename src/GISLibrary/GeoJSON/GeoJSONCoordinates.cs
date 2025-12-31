@@ -1,6 +1,11 @@
-﻿namespace Tudormobile.GeoJSON;
+﻿using System.Text.Json;
+
+namespace Tudormobile.GeoJSON;
 
 /// <summary>
 /// Base class for typed coordinate representations.
 /// </summary>
-public record class GeoJSONCoordinates { }
+public abstract record class GeoJSONCoordinates
+{
+    internal abstract void WriteCoordinatesTo(Utf8JsonWriter writer);
+}

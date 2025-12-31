@@ -23,6 +23,15 @@ public struct GeoJSONPosition
         Altitude = altitude;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the GeoJSONPosition class using the specified coordinate values.
+    /// </summary>
+    /// <remarks>The first value in the collection is interpreted as longitude, the second as latitude, and
+    /// the third (if present) as altitude. This constructor enforces the GeoJSON specification for position
+    /// arrays.</remarks>
+    /// <param name="values">An enumerable collection of double values representing the position coordinates. The collection must contain two
+    /// or three elements: longitude, latitude, and optionally altitude.</param>
+    /// <exception cref="ArgumentException">Thrown if the collection contains fewer than two or more than three values.</exception>
     public GeoJSONPosition(IEnumerable<double> values)
     {
         var count = values.Count();

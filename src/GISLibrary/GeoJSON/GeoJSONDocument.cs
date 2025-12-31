@@ -115,6 +115,8 @@ public class GeoJSONDocument
     private void WriteTo(Utf8JsonWriter writer)
     {
         writer.WriteStartObject();
+        // Write type
+        writer.WriteString(TYPE_PROPERTY, FEATURE_COLLECTION_TYPE);
         // Write custom objects
         if (_objects != null)
         {
@@ -124,8 +126,6 @@ public class GeoJSONDocument
                 JsonSerializer.Serialize(writer, value);
             }
         }
-        // Write type
-        writer.WriteString(TYPE_PROPERTY, FEATURE_COLLECTION_TYPE);
         // Write features
         writer.WritePropertyName(FEATURES_PROPERTY);
         writer.WriteStartArray();
@@ -150,7 +150,7 @@ public class GeoJSONDocument
         writer.WriteEndObject();
     }
 
-    private void WriteFeatureTo(Utf8JsonWriter writer, GeoJSONFeature? feature)
+    private static void WriteFeatureTo(Utf8JsonWriter writer, GeoJSONFeature? feature)
     {
         if (feature is not null && feature.Builder is not null)
         {
@@ -183,7 +183,9 @@ public class GeoJSONDocument
                     writer.WriteStartArray();
                     foreach (var geometry in feature.Builder.Geometries)
                     {
-                        WriteGeometryTo(writer, feature.Builder.Geometry);
+                        writer.WriteStartObject();
+                        WriteGeometryTo(writer, geometry);
+                        writer.WriteEndObject();
                     }
                     writer.WriteEndArray();
                 }
@@ -203,18 +205,21 @@ public class GeoJSONDocument
                 }
                 writer.WriteEndObject();
             }
+            writer.WriteEndObject();
+        }
+        else
+        {
+            writer.WriteNullValue();
         }
     }
 
-    private void WriteGeometryTo(Utf8JsonWriter writer, GeoJSONCoordinates? geometry)
+    private static void WriteGeometryTo(Utf8JsonWriter writer, GeoJSONCoordinates? geometry)
     {
-        writer.WriteStartObject();
         writer.WriteString(TYPE_PROPERTY, TypeFromCoordinates(geometry));
         if (geometry is not null)
         {
             writer.WritePropertyName("coordinates");
-            writer.WriteStartArray(); // TODO: Handle geometries
-            writer.WriteEndArray();
+            geometry.WriteCoordinatesTo(writer);
         }
         else
         {
@@ -222,7 +227,7 @@ public class GeoJSONDocument
         }
     }
 
-    private string TypeFromCoordinates(GeoJSONCoordinates? geometry)
+    private static string TypeFromCoordinates(GeoJSONCoordinates? geometry)
     {
         return geometry switch
         {

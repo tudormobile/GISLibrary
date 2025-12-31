@@ -1,4 +1,6 @@
-﻿namespace Tudormobile.GeoJSON;
+﻿using System.Text.Json;
+
+namespace Tudormobile.GeoJSON;
 
 /// <summary>
 /// Represents a GeoJSON GeometryCollection coordinate object.
@@ -27,4 +29,6 @@ public record GeoJSONGeometryCollection : GeoJSONCoordinates
         _geometries.Add(geometryCoordinates);
         return this;
     }
+
+    internal override void WriteCoordinatesTo(Utf8JsonWriter writer) { }    // this one does nothing
 }

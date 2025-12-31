@@ -6,13 +6,6 @@ namespace Tudormobile.GeoJSON.Tests
     public class GeoJSONModelsTests
     {
         [TestMethod]
-        public void GeoJSONCoordinates_CanInstantiate()
-        {
-            var c = new GeoJSONCoordinates();
-            Assert.IsNotNull(c);
-        }
-
-        [TestMethod]
         public void GeoJSONPosition_GetSet()
         {
             var pos = new GeoJSONPosition { Longitude = 10.5, Latitude = -20.25, Altitude = 100.0 };

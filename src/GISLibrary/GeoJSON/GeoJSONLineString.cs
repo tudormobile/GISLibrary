@@ -1,14 +1,21 @@
-﻿namespace Tudormobile.GeoJSON;
+﻿using System.Text.Json;
+
+namespace Tudormobile.GeoJSON;
 
 /// <summary>
 /// Represents a GeoJSON LineString coordinate object.
 /// </summary>
 public record GeoJSONLineString : GeoJSONCoordinates
 {
-    public GeoJSONLineString()
-    {
+    /// <summary>
+    /// Initializes a new instance of the GeoJSONLineString class representing a geographic line string in GeoJSON
+    /// format.
+    /// </summary>
+    /// <remarks>Use this constructor to create a GeoJSONLineString object before setting its coordinates or
+    /// properties. This class is typically used to model paths or routes as defined by the GeoJSON
+    /// specification.</remarks>
+    public GeoJSONLineString() { }
 
-    }
     /// <summary>
     /// Initializes a new instance of the GeoJSONLineString class with the specified positions.
     /// </summary>
@@ -39,4 +46,21 @@ public record GeoJSONLineString : GeoJSONCoordinates
     /// Gets or sets the positions that make up the line string.
     /// </summary>
     public List<GeoJSONPosition> Positions { get; set; } = [];
+
+    internal override void WriteCoordinatesTo(Utf8JsonWriter writer)
+    {
+        writer.WriteStartArray();
+        foreach (var position in Positions)
+        {
+            writer.WriteStartArray();
+            writer.WriteNumberValue(position.Longitude);
+            writer.WriteNumberValue(position.Latitude);
+            if (position.Altitude.HasValue)
+            {
+                writer.WriteNumberValue(position.Altitude.Value);
+            }
+            writer.WriteEndArray();
+        }
+        writer.WriteEndArray();
+    }
 }

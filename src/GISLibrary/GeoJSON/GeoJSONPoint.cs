@@ -1,4 +1,6 @@
-﻿namespace Tudormobile.GeoJSON;
+﻿using System.Text.Json;
+
+namespace Tudormobile.GeoJSON;
 
 /// <summary>
 /// Represents a GeoJSON Point coordinate object.
@@ -52,4 +54,15 @@ public record GeoJSONPoint : GeoJSONCoordinates
     /// <param name="point">The source point to convert.</param>
     public static implicit operator GeoJSONPosition(GeoJSONPoint? point) => point?.Position ?? default;
 
+    internal override void WriteCoordinatesTo(Utf8JsonWriter writer)
+    {
+        writer.WriteStartArray();
+        writer.WriteNumberValue(Position.Longitude);
+        writer.WriteNumberValue(Position.Latitude);
+        if (Position.Altitude.HasValue)
+        {
+            writer.WriteNumberValue(Position.Altitude.Value);
+        }
+        writer.WriteEndArray();
+    }
 }

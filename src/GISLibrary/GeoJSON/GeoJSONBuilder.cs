@@ -7,12 +7,12 @@ internal class GeoJSONBuilder
 
     public void AddObject(string name, object value)
     {
-        _properties.Add((name, value));
+        _objects.Add((name, value));
     }
     /// <inheritdoc/>
     public void AddProperty(string name, object value)
     {
-        _objects.Add((name, value));
+        _properties.Add((name, value));
     }
 
 }
