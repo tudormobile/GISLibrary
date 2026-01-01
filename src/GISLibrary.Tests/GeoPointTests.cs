@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tudormobile.GIS;
+﻿using Tudormobile.GIS;
 
 namespace GISLibrary.Tests;
 
@@ -261,8 +260,8 @@ public class GeoPointTests
 
         // assert
         Assert.HasCount(2, set);
-        Assert.IsTrue(set.Contains(pt1));
-        Assert.IsTrue(set.Contains(pt3));
+        Assert.Contains(pt1, set);
+        Assert.Contains(pt3, set);
     }
 
     [TestMethod]
