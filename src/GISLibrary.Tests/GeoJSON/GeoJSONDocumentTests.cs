@@ -50,7 +50,8 @@ public class GeoJSONDocumentTests
         var temp = Path.GetTempFileName();
         try
         {
-            var doc = await GeoJSONDocument.ParseAsync(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(SimpleFeatureCollection)), TestContext.CancellationToken);
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(SimpleFeatureCollection));
+            var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
             var file = new GeoJSONFile(temp);
             await file.WriteDocumentAsync(doc, TestContext.CancellationToken);
             Assert.IsTrue(file.Exists());

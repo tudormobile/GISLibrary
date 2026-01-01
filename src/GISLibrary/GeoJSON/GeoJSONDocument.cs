@@ -66,7 +66,7 @@ public class GeoJSONDocument
     public static async Task<GeoJSONDocument> LoadFromFileAsync(string path, CancellationToken cancellationToken = default)
     {
         using var stream = File.OpenRead(path);
-        return await ParseAsync(stream, cancellationToken);
+        return await ParseAsync(stream, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -77,9 +77,7 @@ public class GeoJSONDocument
     /// <returns>A task that represents the asynchronous parse operation. The task result contains the <see cref="GeoJSONDocument"/>.</returns>
     public static async Task<GeoJSONDocument> ParseAsync(Stream utf8Json, CancellationToken cancellationToken = default)
     {
-        var result = await JsonDocument.ParseAsync(utf8Json, cancellationToken: cancellationToken);
-        utf8Json.Close();
-        utf8Json.Dispose();
+        var result = await JsonDocument.ParseAsync(utf8Json, cancellationToken: cancellationToken).ConfigureAwait(false);
         return new GeoJSONDocument(result);
     }
 
@@ -95,7 +93,7 @@ public class GeoJSONDocument
     {
         using var stream = File.Create(path);
         using var writer = new Utf8JsonWriter(stream, options: new JsonWriterOptions() { Indented = true });
-        await WriteToAsync(writer, cancellationToken);
+        await WriteToAsync(writer, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -109,7 +107,7 @@ public class GeoJSONDocument
     public async Task SaveAsync(Stream stream, CancellationToken cancellationToken = default)
     {
         using var writer = new Utf8JsonWriter(stream, options: new JsonWriterOptions() { Indented = true });
-        await WriteToAsync(writer, cancellationToken);
+        await WriteToAsync(writer, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -131,7 +129,7 @@ public class GeoJSONDocument
                 _jsonDocument.WriteTo(utf8JsonWriter);
             }
             utf8JsonWriter.Flush();
-        }, cancellationToken: cancellationToken);
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

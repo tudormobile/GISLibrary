@@ -54,4 +54,12 @@ public class GeoJSONPositionTests
         var exception = Assert.ThrowsExactly<ArgumentException>(() => new GeoJSONPosition([20.0]));
         Assert.AreEqual("A GeoJSON position must have at least two values: longitude and latitude.", exception.Message);
     }
+
+    [TestMethod]
+    public void GeoJSONPosition_ConstructWithValuesCollection_NoValues_Throws()
+    {
+        var exception = Assert.ThrowsExactly<ArgumentException>(() => new GeoJSONPosition([]));
+        Assert.AreEqual("A GeoJSON position must have at least two values: longitude and latitude.", exception.Message);
+    }
+
 }
