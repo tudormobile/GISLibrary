@@ -1,6 +1,3 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: Build, Test, Deploy
 
 on:
@@ -75,12 +72,12 @@ jobs:
         if-no-files-found: ignore 
 # Deployments 
     - name: Create Zip for Release
-      shell: pwsh
+      shell: bash
       run: |
-        $tempDir = New-Item -ItemType Directory -Path (Join-Path $env:TEMP ([System.Guid]::NewGuid()))
-        Get-ChildItem -Path src -Recurse -Filter *.nupkg | Where-Object { $_.FullName -like '*\bin\release\*' } | ForEach-Object { Copy-Item $_.FullName -Destination $tempDir }
-        Compress-Archive -Path $tempDir\* -Destination package.zip -Force
-        Remove-Item $tempDir -Recurse -Force
+        mkdir -p temp_package
+        find src -type f -name "*.nupkg" -path "*/bin/release/*" -exec cp {} temp_package/ \;
+        cd temp_package && zip -r ../package.zip * && cd ..
+        rm -rf temp_package
 
     - name: Test Version output
       run: echo ${{ steps.version_step.outputs.fullSemVer }}      
