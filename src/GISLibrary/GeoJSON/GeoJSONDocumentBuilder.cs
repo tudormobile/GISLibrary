@@ -20,7 +20,7 @@ internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
 
         var featureBuilders = _features.Select(f => f(new GeoJSONFeatureBuilder()));
         // Add custom objects
-        foreach (var (name, value) in _objects)
+        foreach (var (name, value) in ((IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>)this).Objects)
         {
             doc.AddObject(name, value);
         }
@@ -31,7 +31,7 @@ internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
             doc.FeatureCollection.Features.Add(feature.Builder!.Build());
         }
         // add properties
-        foreach (var (name, value) in _properties)
+        foreach (var (name, value) in ((IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>)this).Properties)
         {
             doc.AddProperty(name, value);
         }

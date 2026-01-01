@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: dotnet
+name: Build, Test, Deploy
 
 on:
   push:
@@ -74,5 +71,36 @@ jobs:
         path: docs/_site
         if-no-files-found: ignore 
 # Deployments 
-    - name: Test output
-      run: echo ${{ steps.version_step.outputs.fullSemVer }}   
+    - name: Create Zip for Release
+      shell: bash
+      run: |
+        mkdir -p temp_package
+        find src -type f -name "*.nupkg" -path "*/bin/release/*" -exec cp {} temp_package/ \;
+        cd temp_package && zip -r ../package.zip * && cd ..
+        rm -rf temp_package
+
+    - name: Test Version output
+      run: echo ${{ steps.version_step.outputs.fullSemVer }}      
+
+    - name: Create release
+      if: ${{ github.event_name == 'push' }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "Creating release"
+        echo gh release create --generate-notes v${{ steps.version_step.outputs.fullSemVer }} package.zip
+        gh release create -t ${{ steps.version_step.outputs.fullSemVer }} --generate-notes v${{ steps.version_step.outputs.fullSemVer }} package.zip#package
+
+    - name: Publish package
+      shell: pwsh
+      if: ${{ github.event_name == 'push' }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "Adding local repo as nuget source"
+        dotnet nuget add source --username tudormobile --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/tudormobile/index.json"
+        echo "Pushing package"
+        Get-ChildItem -Path src -Recurse -Filter *.nupkg | Where-Object { $_.FullName -like '*\bin\release\*' } | ForEach-Object {
+          Write-Host "Pushing $($_.FullName)" 
+          dotnet nuget push $_.FullName --source "github" --skip-duplicate 
+        }

@@ -34,18 +34,25 @@ public struct GeoJSONPosition
     /// <exception cref="ArgumentException">Thrown if the collection contains fewer than two or more than three values.</exception>
     public GeoJSONPosition(IEnumerable<double> values)
     {
-        var count = values.Count();
-        if (count < 2)
+        using var enumerator = values.GetEnumerator();
+        if (!enumerator.MoveNext())
         {
             throw new ArgumentException("A GeoJSON position must have at least two values: longitude and latitude.");
         }
-        if (count > 3)
+        Longitude = enumerator.Current;
+        if (!enumerator.MoveNext())
         {
-            throw new ArgumentException("A GeoJSON position can have at most three values: longitude, latitude, and altitude.");
+            throw new ArgumentException("A GeoJSON position must have at least two values: longitude and latitude.");
         }
-        Longitude = values.First();
-        Latitude = values.Skip(1).First();
-        Altitude = count == 3 ? values.Last() : null;
+        Latitude = enumerator.Current;
+        if (enumerator.MoveNext())
+        {
+            Altitude = enumerator.Current;
+            if (enumerator.MoveNext())
+            {
+                throw new ArgumentException("A GeoJSON position can have at most three values: longitude, latitude, and altitude.");
+            }
+        }
     }
 
     /// <summary>

@@ -34,7 +34,7 @@ public class GeoJSONFile(string path)
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous read operation. The task result contains the <see cref="GeoJSONDocument"/>.</returns>
     public async Task<GeoJSONDocument> ReadDocumentAsync(CancellationToken cancellationToken = default)
-        => await GeoJSONDocument.LoadFromFileAsync(path, cancellationToken);
+        => await GeoJSONDocument.LoadFromFileAsync(path, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Writes the provided GeoJSON document to the file asynchronously.
@@ -43,5 +43,5 @@ public class GeoJSONFile(string path)
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous write operation.</returns>
     public async Task WriteDocumentAsync(GeoJSONDocument document, CancellationToken cancellationToken = default)
-        => await document.SaveToFileAsync(path, cancellationToken);
+        => await document.SaveToFileAsync(path, cancellationToken).ConfigureAwait(false);
 }

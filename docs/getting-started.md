@@ -2,7 +2,7 @@
 
 ### Install the package
 ```bash
-dotnet add package Tudormobile.AlphaVantageAPI
+dotnet add package Tudormobile.GISLibrary
 ```
 ### Dependencies
 Microsoft.Extensions.Logging
