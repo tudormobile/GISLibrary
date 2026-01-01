@@ -126,7 +126,7 @@ public class GeoJSONDocumentTests
     public async Task GetJSONDocument_SaveAsync_WithINVALIDGeometryTest()
     {
         // Arrange
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         var badGeo = new BadGeometry();
         var document = GeoJSONDocument.Create()
         .AddFeature(f => f.SetGeometry(badGeo))
@@ -144,6 +144,6 @@ public record BadGeometry : GeoJSONCoordinates
 {
     internal override void WriteCoordinatesTo(Utf8JsonWriter writer)
     {
-        Assert.Fail("Should never get here!)");
+        Assert.Fail("Should never get here!");
     }
 }

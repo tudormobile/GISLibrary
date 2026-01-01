@@ -1,7 +1,7 @@
 ﻿namespace Tudormobile.GIS;
 
 /// <summary>
-/// 'Point' gemoetry object
+/// 'Point' geometry object
 /// </summary>
 public struct GeoPoint3D
 {

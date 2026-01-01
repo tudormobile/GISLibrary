@@ -5,13 +5,13 @@ GeoJSON is a widely used format for encoding geographic data structures using Ja
 Ref: [GeoJSON Specification](https://tools.ietf.org/html/rfc7946) RFC7946
 
 > [!NOTE]  
-> The capitilization style of GeoJSON (capital JSON) is used to match the convention
-> in RFC 7946 specification. All methods involving I/O are implmementd as asynchronous.
+> The capitalization style of GeoJSON (capital JSON) is used to match the convention
+> in RFC 7946 specification. All methods involving I/O are implemented as asynchronous.
 ### Supported Features
 - All Geometry Objects, including GeometryCollection
 - Bounding box options
 - Properties
-- Arbitray objects (members)
+- Arbitrary objects (members)
 - Reading, creating, and writing GeoJSON documents and files
 
 ## GeoJSON Documents
@@ -40,7 +40,7 @@ The following GeoJSON primitive types are implemented:
 - `GeoJSONBBox`: Represents a bounding box for a geometry.  
 
 ## GeoJSON Geometry Types
-The seven GeoJSON Gemoetry types:
+The seven GeoJSON Geometry types:
 - `GeoJSONPoint`: Represents a single geographic point.
 - `GeoJSONLineString`: Represents a series of connected geographic points (a line).
 - `GeoJSONPolygon`: Represents a polygon defined by a series of geographic points.
@@ -95,7 +95,7 @@ await document.WriteToAsync(utf8JsonWriter);
 The Save/Write overloads allow flexibility and extension opportunities.
 ## GeoJSON Geometries
 ### Creating Geometries
-The GeoJSON geometries are created from GeoJSON files using the Document Object Model (DOM) of the GeoJSONDocument. The ***FeatureCollection*** property holds a collection of *features*, each containing a ***Geometry*** property (for the *geometry*), ***BoundingBox*** property (optional *bounding box*) and a ***Properties*** property (to access the *properties*). The GeoJSON geomteries each have a ***Coordinates*** property to access the specific geometry records.
+The GeoJSON geometries are created from GeoJSON files using the Document Object Model (DOM) of the GeoJSONDocument. The ***FeatureCollection*** property holds a collection of *features*, each containing a ***Geometry*** property (for the *geometry*), ***BoundingBox*** property (optional *bounding box*) and a ***Properties*** property (to access the *properties*). The GeoJSON geometries each have a ***Coordinates*** property to access the specific geometry records.
 #### Geometry Records
 Geometry records are created when reading/parsing GeoJSON files and they may also be created manually to construct GeoJSON documents and files. There are records to represent all seven GeoJSON geometries, and they are built from the basic building block - which is the ***Position*** structure.
 ```cs

@@ -76,7 +76,7 @@ public class GeoJSONGeometryTests
         }";
         var element = JsonElement.Parse(json);
         var position = new GeoJSONGeometry(element);
-        var p = Assert.ThrowsExactly<IndexOutOfRangeException>(() => (GeoJSONPoint)position.Coordinates);
+        _ = Assert.ThrowsExactly<IndexOutOfRangeException>(() => (GeoJSONPoint)position.Coordinates);
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public class GeoJSONGeometryTests
         }";
         var element = JsonElement.Parse(json);
         var position = new GeoJSONGeometry(element);
-        var p = Assert.ThrowsExactly<IndexOutOfRangeException>(() => (GeoJSONPoint)position.Coordinates);
+        _ = Assert.ThrowsExactly<IndexOutOfRangeException>(() => (GeoJSONPoint)position.Coordinates);
     }
 
     [TestMethod]
@@ -299,7 +299,7 @@ public class GeoJSONGeometryTests
         var g1 = p1;
         var g2 = new GeoJSONMultiPoint() with { Points = [p1, p2] };
 
-        var expected = new GeoJSONGeometryCollection()
+        _ = new GeoJSONGeometryCollection()
             .AddGeometry(g1).AddGeometry(g2);
 
         var json = @"
