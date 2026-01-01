@@ -120,6 +120,8 @@ public class GeoJSONDocument
     {
         await Task.Run(() =>
         {
+            using var stream = File.Create(path);
+            using var writer = new Utf8JsonWriter(stream, options: new JsonWriterOptions() { Indented = true });
             if (_jsonDocument == null)
             {
                 WriteTo(utf8JsonWriter);
@@ -176,65 +178,72 @@ public class GeoJSONDocument
     }
 
     private static void WriteFeatureTo(Utf8JsonWriter writer, GeoJSONFeature feature)
-    {
-        writer.WriteStartObject();
-        writer.WriteString(TYPE_PROPERTY, FEATURE_TYPE);
+        {
+            writer.WriteStartObject();
+            writer.WriteString(TYPE_PROPERTY, FEATURE_TYPE);
 
-        // Custom objects first
+            // Custom objects first
         if (feature.Builder!.Objects != null)
-        {
+            {
             foreach (var (name, value) in feature.Builder!.Objects)
-            {
-                writer.WritePropertyName(name);
-                JsonSerializer.Serialize(writer, value);
-            }
-        }
-        // Then the geometry
-        if (feature.Builder.Geometry != null || feature.Builder.Geometries != null)
-        {
-            writer.WritePropertyName(GEOMETRY_PROPERTY);
-            writer.WriteStartObject();
-
-            if (feature.Builder.Geometry != null)
-            {
-                WriteGeometryTo(writer, feature.Builder.Geometry);
-            }
-            else if (feature.Builder.Geometries != null)
-            {
-                writer.WriteString(TYPE_PROPERTY, "GeometryCollection");
-                writer.WritePropertyName("geometries");
-                writer.WriteStartArray();
-                foreach (var geometry in feature.Builder.Geometries)
                 {
-                    writer.WriteStartObject();
-                    WriteGeometryTo(writer, geometry);
-                    writer.WriteEndObject();
+                    writer.WritePropertyName(name);
+                    JsonSerializer.Serialize(writer, value);
                 }
-                writer.WriteEndArray();
             }
-
-            writer.WriteEndObject();
-        }
-
-        // Finally, the standard feature properties
-        if (feature.Builder.Properties != null)
-        {
-            writer.WritePropertyName(PROPERTIES_PROPERTY);
-            writer.WriteStartObject();
-            foreach (var (name, value) in feature.Builder.Properties)
+            // Then the geometry
+            if (feature.Builder.Geometry != null || feature.Builder.Geometries != null)
             {
-                writer.WritePropertyName(name);
-                JsonSerializer.Serialize(writer, value);
+                writer.WritePropertyName(GEOMETRY_PROPERTY);
+                writer.WriteStartObject();
+
+                if (feature.Builder.Geometry != null)
+                {
+                    WriteGeometryTo(writer, feature.Builder.Geometry);
+                }
+                else if (feature.Builder.Geometries != null)
+                {
+                    writer.WriteString(TYPE_PROPERTY, "GeometryCollection");
+                    writer.WritePropertyName("geometries");
+                    writer.WriteStartArray();
+                    foreach (var geometry in feature.Builder.Geometries)
+                    {
+                        writer.WriteStartObject();
+                        WriteGeometryTo(writer, geometry);
+                        writer.WriteEndObject();
+                    }
+                    writer.WriteEndArray();
+                }
+
+                writer.WriteEndObject();
+            }
+
+            // Finally, the standard feature properties
+            if (feature.Builder.Properties != null)
+            {
+                writer.WritePropertyName(PROPERTIES_PROPERTY);
+                writer.WriteStartObject();
+                foreach (var (name, value) in feature.Builder.Properties)
+                {
+                    writer.WritePropertyName(name);
+                    JsonSerializer.Serialize(writer, value);
+                }
+                writer.WriteEndObject();
             }
             writer.WriteEndObject();
         }
-        writer.WriteEndObject();
+        else
+        {
+            writer.WriteNullValue();
+        }
     }
 
     private static void WriteGeometryTo(Utf8JsonWriter writer, GeoJSONCoordinates? geometry)
     {
         writer.WriteString(TYPE_PROPERTY, TypeFromCoordinates(geometry));
-        writer.WritePropertyName("coordinates");
+        if (geometry is not null)
+        {
+            writer.WritePropertyName("coordinates");
         geometry!.WriteCoordinatesTo(writer);   // Non-null as per TypeFromCoordinates
     }
 
