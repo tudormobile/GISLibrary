@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
+using Tudormobile.GeoJSON;
 
-namespace Tudormobile.GeoJSON.Tests;
+namespace GISLibrary.Tests.GeoJSON;
 
 [TestClass]
 public class GeoJSONGeometryTests

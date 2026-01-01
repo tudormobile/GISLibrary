@@ -1,7 +1,7 @@
 ﻿namespace GISLibrary.Tests;
 
 [TestClass]
-public class GeoPointTests
+public class GeoLineTests
 {
 
 }
