@@ -1,7 +1,4 @@
 ﻿namespace Tudormobile.GIS;
-
-using System;
-
 /// <summary>
 /// Represents a line segment defined by two geographic points.
 /// </summary>
@@ -52,7 +49,7 @@ public struct GeoLine
     /// <param name="t">A tuple containing four double values: (x1, y1, x2, y2), where (x1, y1) and (x2, y2) specify the coordinates of
     /// the start and end points of the line segment.</param>
     public static implicit operator GeoLine((double x1, double y1, double x2, double y2) t)
-        => new GeoLine(t.x1, t.y1, t.x2, t.y2);
+        => new(t.x1, t.y1, t.x2, t.y2);
 
     /// <summary>
     /// Converts a tuple of two points to a GeoLine instance representing the line segment between them.
@@ -62,22 +59,5 @@ public struct GeoLine
     /// <param name="t">A tuple containing two points, each represented as a tuple of x and y coordinates, that define the start and end
     /// points of the line segment.</param>
     public static implicit operator GeoLine(((double x, double y) a, (double x, double y) b) t)
-        => new GeoLine(t.a.x, t.a.y, t.b.x, t.b.y);
-
-    /// <summary>
-    /// Converts an array of four double values to a GeoLine instance representing a line segment defined by two
-    /// geographic coordinates.
-    /// </summary>
-    /// <remarks>The input array must contain at least four elements. Additional elements beyond the fourth
-    /// are ignored. This operator enables convenient conversion from a raw coordinate array to a GeoLine
-    /// object.</remarks>
-    /// <param name="values">An array of double values containing at least four elements. The first two elements specify the latitude and
-    /// longitude of the starting point, and the next two elements specify the latitude and longitude of the ending
-    /// point.</param>
-    public static implicit operator GeoLine(double[] values)
-    {
-        if (values == null || values.Length < 4) throw new ArgumentException("Input sequence must contain at least four double values.", nameof(values));
-        return new GeoLine(values[0], values[1], values[2], values[3]);
-    }
-
+        => new(t.a.x, t.a.y, t.b.x, t.b.y);
 }
