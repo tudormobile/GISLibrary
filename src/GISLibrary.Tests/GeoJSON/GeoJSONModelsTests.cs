@@ -16,22 +16,14 @@ public class GeoJSONModelsTests
     }
 
     [TestMethod]
-    public void GeoJSONPoint_SetPosition()
-    {
-        var p = new GeoJSONPoint { Position = new GeoJSONPosition { Longitude = 1, Latitude = 2 } };
-        Assert.AreEqual(1, p.Position.Longitude);
-        Assert.AreEqual(2, p.Position.Latitude);
-    }
-
-    [TestMethod]
     public void GeoJSONMultiPoint_SetPoints()
     {
         var mp = new GeoJSONMultiPoint
         {
             Points =
             [
-                new GeoJSONPoint { Position = new GeoJSONPosition { Longitude = 1, Latitude = 2 } },
-                    new GeoJSONPoint { Position = new GeoJSONPosition { Longitude = 3, Latitude = 4 } }
+                new GeoJSONPoint(new GeoJSONPosition { Longitude = 1, Latitude = 2 }),
+                new GeoJSONPoint(new GeoJSONPosition { Longitude = 3, Latitude = 4 })
             ]
         };
         Assert.HasCount(2, mp.Points);

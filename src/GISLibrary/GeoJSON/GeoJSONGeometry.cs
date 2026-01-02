@@ -22,7 +22,7 @@ public class GeoJSONGeometry
             || !Enum.TryParse<GeoJSONDocument.GeoJSONGeometryType>(typeProperty.GetString(), out var geometryType)
             )
         {
-            throw new ArgumentException("The provided JSON element is not a known Geometry.", "Type");
+            throw new ArgumentException("The provided JSON element is not a known Geometry.");
         }
         _geometryType = geometryType;
         _geometryElement = geometryElement;
@@ -48,21 +48,14 @@ public class GeoJSONGeometry
         => _geometryType == GeoJSONDocument.GeoJSONGeometryType.GeometryCollection
             ? _geometryElement.GetProperty("geometries")
             : _geometryElement.GetProperty("coordinates");
-    private GeoJSONCoordinates CreateCoordinates(GeoJSONDocument.GeoJSONGeometryType geometryType, JsonElement coordinatesElement)
+    private static GeoJSONCoordinates CreateCoordinates(GeoJSONDocument.GeoJSONGeometryType geometryType, JsonElement coordinatesElement)
     {
-
         return geometryType switch
         {
-            GeoJSONDocument.GeoJSONGeometryType.Point => new GeoJSONPoint
-            {
-                Position = PositionFromCoordinates(coordinatesElement)
-            },
+            GeoJSONDocument.GeoJSONGeometryType.Point => new GeoJSONPoint(PositionFromCoordinates(coordinatesElement)),
             GeoJSONDocument.GeoJSONGeometryType.MultiPoint => new GeoJSONMultiPoint
             {
-                Points = [.. coordinatesElement.EnumerateArray().Select(coord => new GeoJSONPoint
-                    {
-                        Position = PositionFromCoordinates(coord)
-                    })]
+                Points = [.. coordinatesElement.EnumerateArray().Select(coord => new GeoJSONPoint(PositionFromCoordinates(coord)))]
             },
             GeoJSONDocument.GeoJSONGeometryType.LineString => new GeoJSONLineString
             {

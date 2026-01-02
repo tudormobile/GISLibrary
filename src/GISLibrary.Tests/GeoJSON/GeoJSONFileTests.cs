@@ -15,7 +15,7 @@ public class GeoJSONFileTests
         var file = new GeoJSONFile(path);
         Assert.IsTrue(File.Exists(path));
         Assert.IsTrue(file.Exists());
-        var doc = await file.ReadDocumentAsync(TestContext.CancellationToken);
+        using var doc = await file.ReadDocumentAsync(TestContext.CancellationToken);
         Assert.HasCount(26, doc.FeatureCollection.Features);
         Assert.AreEqual(1, doc.FeatureCollection.Features[0].Properties["District"].GetInt64());
         Assert.AreEqual(7, doc.FeatureCollection.Features.Count(f => f.Properties["Party"].GetString() == "Republican"));

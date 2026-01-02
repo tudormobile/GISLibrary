@@ -45,7 +45,7 @@ public record GeoJSONPoint : GeoJSONCoordinates
     /// <summary>
     /// Gets or sets the point position.
     /// </summary>
-    public GeoJSONPosition Position { get; set; }
+    public GeoJSONPosition Position { get; private set; }
 
     /// <summary>
     /// Implicitly converts a <see cref="GeoJSONPoint"/> to a <see cref="GeoJSONPosition"/>.

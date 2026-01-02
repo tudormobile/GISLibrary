@@ -5,7 +5,7 @@ namespace Tudormobile.GeoJSON;
 /// <summary>
 /// Represents a parsed GeoJSON document.
 /// </summary>
-public class GeoJSONDocument
+public class GeoJSONDocument : IDisposable
 {
     internal static readonly string TYPE_PROPERTY = "type";
     internal static readonly string FEATURES_PROPERTY = "features";
@@ -49,6 +49,14 @@ public class GeoJSONDocument
     {
         _jsonDocument = jsonDocument;
     }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        _jsonDocument?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     internal void AddObject(string name, object value) => (_objects ??= []).Add((name, value));
     internal void AddProperty(string name, object value) => (_propertyObjects ??= new Dictionary<string, object>())[name] = value;
 
@@ -147,7 +155,7 @@ public class GeoJSONDocument
     /// <returns>A task that represents the asynchronous save operation.</returns>
     public async Task SaveAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        using var writer = new Utf8JsonWriter(stream, options: new JsonWriterOptions() { Indented = true });
+        using var writer = new Utf8JsonWriter(stream, options: new JsonWriterOptions { Indented = true });
         await WriteToAsync(writer, cancellationToken).ConfigureAwait(false);
     }
 
@@ -159,24 +167,24 @@ public class GeoJSONDocument
     /// <returns>A task that represents the asynchronous save operation.</returns>
     public async Task WriteToAsync(Utf8JsonWriter utf8JsonWriter, CancellationToken cancellationToken = default)
     {
-        await Task.Run(() =>
+        if (_jsonDocument == null)
         {
-            if (_jsonDocument == null)
-            {
-                WriteTo(utf8JsonWriter);
-            }
-            else
-            {
-                _jsonDocument.WriteTo(utf8JsonWriter);
-            }
-            utf8JsonWriter.Flush();
-        }, cancellationToken: cancellationToken).ConfigureAwait(false);
+            WriteTo(utf8JsonWriter);
+        }
+        else
+        {
+            _jsonDocument.WriteTo(utf8JsonWriter);
+        }
+        await utf8JsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Gets the feature collection contained in the document.
     /// </summary>
-    public GeoJSONFeatureCollection FeatureCollection => _featureCollection ??= new GeoJSONFeatureCollection(_jsonDocument!.RootElement);
+    public GeoJSONFeatureCollection FeatureCollection => _featureCollection ??=
+        _jsonDocument is null
+        ? new GeoJSONFeatureCollection()
+        : new GeoJSONFeatureCollection(_jsonDocument!.RootElement);
 
     private void WriteTo(Utf8JsonWriter writer)
     {
