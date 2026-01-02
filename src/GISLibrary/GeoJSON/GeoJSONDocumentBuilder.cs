@@ -93,17 +93,16 @@ public interface IGeoJSONDocumentBuilder
     /// <summary>
     /// Sets a bounding box to the GeoJSON document using the specified coordinate values.
     /// </summary>
-    /// <remarks>The number and order of values in <paramref name="values"/> must match the dimensionality of
+    /// <remarks>
+    /// The number and order of values in <paramref name="values"/> must match the dimensionality of
     /// the geometry being described. Supplying an incorrect number of coordinates may result in an invalid GeoJSON
-    /// document.</remarks>
+    /// document. A bounding box is normally set on geometry elements, but when set on the FeatureCollection level,
+    /// it applies to all features within the collection.
+    /// </remarks>
     /// <param name="values">A sequence of double values representing the bounding box coordinates. The values should be provided in the
     /// order required by the GeoJSON specification (e.g., [west, south, east, north] for 2D, or [west, south, minZ,
     /// east, north, maxZ] for 3D).</param>
     /// <returns>The current instance of the <see cref="IGeoJSONDocumentBuilder"/>, enabling method chaining.</returns>
-    /// <remarks>
-    /// A bounding box is normally set on geometry elements, but when set on the FeatureCollection level, it
-    /// applies to all features within the collection.
-    /// </remarks>
     IGeoJSONDocumentBuilder SetBoundingBox(IEnumerable<double> values);
 
 }
