@@ -30,9 +30,10 @@ public class GeoJSONDocument
 
     private readonly JsonDocument? _jsonDocument;
     private GeoJSONFeatureCollection? _featureCollection;
-    private List<(string, object)>? _properties;
+    private IDictionary<string, JsonElement>? _properties;
+    private IDictionary<string, object>? _propertyObjects;
     private List<(string, object)>? _objects;
-
+    private IDictionary<string, object>? _arbitraryObjects;
 
     /// <summary>
     /// Creates a new instance of the IGeoJSONDocumentBuilder for constructing GeoJSON documents.
@@ -49,13 +50,55 @@ public class GeoJSONDocument
         _jsonDocument = jsonDocument;
     }
     internal void AddObject(string name, object value) => (_objects ??= []).Add((name, value));
-    internal void AddProperty(string name, object value) => (_properties ??= []).Add((name, value));
+    internal void AddProperty(string name, object value) => (_propertyObjects ??= new Dictionary<string, object>())[name] = value;
 
     internal GeoJSONDocument()
     {
         _jsonDocument = null;
         _featureCollection = new GeoJSONFeatureCollection();
     }
+
+    /// <summary>
+    /// Gets the collection of JSON objects associated with their string keys.
+    /// </summary>
+    /// <remarks>The returned dictionary provides access to the underlying JSON elements by key. Modifications
+    /// to the dictionary affect the set of available objects. The property never returns null.</remarks>
+    public IDictionary<string, object> Objects => _arbitraryObjects ??= CreateObjectDictionary();
+
+    /// <summary>
+    /// Gets the properties dictionary for the feature.
+    /// </summary>
+    public IDictionary<string, JsonElement> Properties => _properties ??= CreatePropertiesDictionary();
+
+    private Dictionary<string, JsonElement> CreatePropertiesDictionary()
+    {
+        if (_jsonDocument is not null)
+        {
+            if (_jsonDocument.RootElement.TryGetProperty(GeoJSONDocument.PROPERTIES_PROPERTY, out var propertiesElement))
+            {
+                return propertiesElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
+            }
+        }
+        return _propertyObjects?.ToDictionary(x => x.Key, x => JsonSerializer.SerializeToElement(x.Value)) ?? [];
+    }
+
+    private Dictionary<string, object> CreateObjectDictionary()
+    {
+        if (_jsonDocument is not null)
+        {
+            var dict = new Dictionary<string, object>();
+            foreach (var property in _jsonDocument.RootElement.EnumerateObject())
+            {
+                if (property.Name != TYPE_PROPERTY && property.Name != FEATURES_PROPERTY && property.Name != PROPERTIES_PROPERTY)
+                {
+                    dict[property.Name] = property.Value;
+                }
+            }
+            return dict;
+        }
+        return _objects?.ToDictionary(x => x.Item1, x => x.Item2) ?? [];
+    }
+
 
     /// <summary>
     /// Loads a GeoJSON document from a file asynchronously.
@@ -160,11 +203,11 @@ public class GeoJSONDocument
         }
         writer.WriteEndArray();
         // Write properties
-        if (_properties != null)
+        if (_propertyObjects != null)
         {
             writer.WritePropertyName(PROPERTIES_PROPERTY);
             writer.WriteStartObject();
-            foreach (var (name, value) in _properties)
+            foreach (var (name, value) in _propertyObjects)
             {
                 writer.WritePropertyName(name);
                 JsonSerializer.Serialize(writer, value);

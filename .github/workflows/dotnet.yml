@@ -75,7 +75,7 @@ jobs:
       shell: bash
       run: |
         mkdir -p temp_package
-        find src -type f -name "*.nupkg" -path "*/bin/release/*" -exec cp {} temp_package/ \;
+        find src -type f -name "*.nupkg" -path "*/bin/Release/*" -exec cp {} temp_package/ \;
         cd temp_package && zip -r ../package.zip * && cd ..
         rm -rf temp_package
 

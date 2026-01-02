@@ -70,4 +70,107 @@ public class GeoLineTests
         Assert.AreEqual(4.0, line.EndPoint.Y);
     }
 
+    [TestMethod]
+    public void Equals_WithEqualLines_ReturnsTrue()
+    {
+        // arrange
+        var line1 = new GeoLine(1, 2, 3, 4);
+        var line2 = new GeoLine(1, 2, 3, 4);
+        object line3 = new GeoLine(1, 2, 3, 4);
+        object notALine = "Not a line";
+
+        // act
+        var result = line1.Equals(line2);
+
+        // assert
+        Assert.IsTrue(result);
+        Assert.IsTrue(line1.Equals(line3));
+        Assert.IsFalse(line1.Equals(notALine));
+    }
+
+    [TestMethod]
+    public void Equals_WithDifferentLines_ReturnsFalse()
+    {
+        // arrange
+        var line1 = new GeoLine(1, 2, 3, 4);
+        var line2 = new GeoLine(5, 6, 7, 8);
+
+        // act
+        var result = line1.Equals(line2);
+
+        // assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void Equals_WithNull_ReturnsFalse()
+    {
+        // arrange
+        var line = new GeoLine(1, 2, 3, 4);
+
+        // act
+        var result = line.Equals(null);
+
+        // assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void EqualsOperator_WithEqualLines_ReturnsTrue()
+    {
+        // arrange
+        var line1 = new GeoLine(1, 2, 3, 4);
+        var line2 = new GeoLine(1, 2, 3, 4);
+
+        // act
+        var result = line1 == line2;
+
+        // assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void NotEqualsOperator_WithDifferentLines_ReturnsTrue()
+    {
+        // arrange
+        var line1 = new GeoLine(1, 2, 3, 4);
+        var line2 = new GeoLine(5, 6, 7, 8);
+
+        // act
+        var result = line1 != line2;
+
+        // assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void GetHashCode_WithEqualLines_ReturnsSameHash()
+    {
+        // arrange
+        var line1 = new GeoLine(1, 2, 3, 4);
+        var line2 = new GeoLine(1, 2, 3, 4);
+
+        // act
+        var hash1 = line1.GetHashCode();
+        var hash2 = line2.GetHashCode();
+
+        // assert
+        Assert.AreEqual(hash1, hash2);
+    }
+
+    [TestMethod]
+    public void ToString_ReturnsFormattedString()
+    {
+        // arrange
+        var line = new GeoLine(1.5, 2.5, 3.5, 4.5);
+
+        // act
+        var result = line.ToString();
+
+        // assert
+        Assert.Contains("1.5", result);
+        Assert.Contains("2.5", result);
+        Assert.Contains("3.5", result);
+        Assert.Contains("4.5", result);
+    }
 }

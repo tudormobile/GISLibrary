@@ -32,4 +32,6 @@ public class GeoPolyline3DTests
         // assert
         Assert.HasCount(2, pts);
     }
+
+
 }
