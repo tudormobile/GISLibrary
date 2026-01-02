@@ -31,8 +31,8 @@ internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
         {
             var feature = featureBuilder.Build();
             doc.FeatureCollection.Features.Add(feature.Builder!.Build());
-            doc.FeatureCollection.BoundingBox = _boundingBox;
         }
+        doc.FeatureCollection.BoundingBox = _boundingBox;
         // add properties
         foreach (var (name, value) in ((IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>)this).Properties)
         {
