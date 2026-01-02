@@ -13,6 +13,7 @@ public class GeoJSONDocument : IDisposable
     internal static readonly string PROPERTIES_PROPERTY = "properties";
     internal static readonly string FEATURE_COLLECTION_TYPE = "FeatureCollection";
     internal static readonly string FEATURE_TYPE = "Feature";
+    internal static readonly string BBOX_PROPERTY = "bbox";
 
     /// <summary>
     /// Geometry types defined by the GeoJSON specification used by this library.

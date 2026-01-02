@@ -10,6 +10,7 @@ public class GeoJSONDocumentTests
 {
     private const string SimpleFeatureCollection = "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[1.0,2.0]},\"properties\":{\"name\":\"A\"}}]}";
     private const string EmptyFeatureCollection = "{\"type\":\"FeatureCollection\",\"features\":[],\"properties\":{\"name\":\"A\"}}";
+    private const string EmptyFeatureCollectionWithBoundingBox = "{\"type\":\"FeatureCollection\",\"bbox\":[1,2.0,3.4],\"features\":[],\"properties\":{\"name\":\"A\"}}";
 
     [TestMethod]
     public async Task ParseFeatureCollection_LoadsProperties()
@@ -27,14 +28,26 @@ public class GeoJSONDocumentTests
     [TestMethod]
     public async Task ParseFeatureCollection_LoadsFeatures()
     {
-        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(SimpleFeatureCollection));
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(SimpleFeatureCollection));
         var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
         Assert.IsNotNull(doc);
+        Assert.IsNull(doc.FeatureCollection.BoundingBox);
         var features = doc.FeatureCollection.Features;
         Assert.HasCount(1, features);
         var feature = features[0];
         Assert.AreEqual("Point", feature.Geometry.GetProperty("type").GetString());
         Assert.AreEqual("A", feature.Properties["name"].GetString());
+        Assert.IsNull(feature.BoundingBox);
+    }
+
+    [TestMethod]
+    public async Task ParseFeatureCollection_WithBoundingBox_LoadsFeatures()
+    {
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(EmptyFeatureCollectionWithBoundingBox));
+        var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
+        Assert.IsNotNull(doc);
+        Assert.IsNotNull(doc.FeatureCollection.BoundingBox);
+        CollectionAssert.AreEqual(new double[] { 1, 2.0, 3.4 }, doc.FeatureCollection.BoundingBox);
     }
 
     [TestMethod]
@@ -124,9 +137,11 @@ public class GeoJSONDocumentTests
         var document = GeoJSONDocument.Create()
         .AddProperty("creator", "GeoJSONDocumentTests")
         .AddProperty("version", "1.0")
+        .SetBoundingBox([0.0, 0.0, 10.0, 10.0])
         .AddObject("metadata", new { date = DateTime.UtcNow.ToString("o"), count = 3 })
         .AddFeature(f => f
             .SetGeometry([multipoly, polygon, strings])
+            .SetBoundingBox([0.0, 0.0, 80.0, 80.0])
             .AddObject("id", 4)
             .AddProperty("description", "This is a multi-geometry feature"))
         .Build();
@@ -140,6 +155,12 @@ public class GeoJSONDocumentTests
 
         Assert.HasCount(2, document.Properties);
         Assert.HasCount(1, document.Objects);
+
+        Assert.IsNotNull(document.FeatureCollection.BoundingBox);
+        Assert.IsNotNull(document.FeatureCollection.Features[0].BoundingBox);
+
+        CollectionAssert.AreEqual(new List<double> { 0.0, 0.0, 10.0, 10.0 }, document.FeatureCollection.BoundingBox);
+        CollectionAssert.AreEqual(new List<double> { 0.0, 0.0, 80.0, 80.0 }, document.FeatureCollection.Features[0].BoundingBox);
     }
 
     [TestMethod]
@@ -159,6 +180,29 @@ public class GeoJSONDocumentTests
         Assert.HasCount(0, document.Properties);
         Assert.HasCount(0, document.Objects);
         Assert.HasCount(0, document.FeatureCollection.Features);
+    }
+
+    [TestMethod]
+    public async Task GetJSONDocument_ParseWithBoundingBoxesTest()
+    {
+        string json = @"{
+""type"":""FeatureCollection"",
+""features"":[
+{
+  ""type"":""Feature"",
+  ""bbox"": [1,2],
+  ""geometry"": {
+    ""type"":""Point"",
+    ""coordinates"":[1.0,2.0]
+  }
+}
+]
+}";
+        var jsonDoc = JsonDocument.Parse(json);
+        var geoJsonDoc = new GeoJSONDocument(jsonDoc);
+
+        Assert.IsNotNull(geoJsonDoc.FeatureCollection.Features[0].BoundingBox);
+        CollectionAssert.AreEqual(new double[] { 1.0, 2.0 }, geoJsonDoc.FeatureCollection.Features[0].BoundingBox);
     }
 
     [TestMethod]

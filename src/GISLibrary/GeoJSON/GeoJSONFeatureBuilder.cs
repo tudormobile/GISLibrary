@@ -1,4 +1,5 @@
-﻿using Tudormobile.GIS;
+﻿using System.Collections.Immutable;
+using Tudormobile.GIS;
 
 namespace Tudormobile.GeoJSON;
 
@@ -7,12 +8,16 @@ internal class GeoJSONFeatureBuilder : GeoJSONBuilder, IGeoJSONFeatureBuilder
 {
     private GeoJSONCoordinates? _geometry;
     private List<GeoJSONCoordinates>? _geometries;
+    private ImmutableArray<double>? _boundingBox;
 
     /// <inheritdoc/>
     public GeoJSONCoordinates? Geometry => _geometry;
 
     /// <inheritdoc/>
     public IEnumerable<GeoJSONCoordinates>? Geometries => _geometries;
+
+    /// <inheritdoc/>
+    public ImmutableArray<double>? BoundingBox => _boundingBox;
 
     /// <inheritdoc/>
     List<(string, object)> IGeoJSONObjectBuilder<IGeoJSONFeatureBuilder>.Properties => base._properties;
@@ -34,6 +39,13 @@ internal class GeoJSONFeatureBuilder : GeoJSONBuilder, IGeoJSONFeatureBuilder
     public IGeoJSONFeatureBuilder SetGeometry(IEnumerable<GeoJSONCoordinates> geometries)
     {
         _geometries = [.. geometries];
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IGeoJSONFeatureBuilder SetBoundingBox(IEnumerable<double> values)
+    {
+        _boundingBox = values.ToImmutableArray();
         return this;
     }
 
@@ -131,4 +143,24 @@ public interface IGeoJSONFeatureBuilder
     /// Gets the collection of coordinate geometries represented by this instance.
     /// </summary>
     IEnumerable<GeoJSONCoordinates>? Geometries { get; }
+
+    /// <summary>
+    /// Sets a bounding box to the GeoJSON geometry.
+    /// </summary>
+    /// <remarks>The number and order of values in <paramref name="values"/> must match the dimensionality of
+    /// the geometry being described. Supplying an incorrect number of coordinates may result in an invalid GeoJSON
+    /// document.</remarks>
+    /// <param name="values">A sequence of double values representing the bounding box coordinates. The values should be provided in the
+    /// order required by the GeoJSON specification (e.g., [west, south, east, north] for 2D, or [west, south, minZ,
+    /// east, north, maxZ] for 3D).</param>
+    /// <returns>The current instance of the <see cref="IGeoJSONFeatureBuilder"/>, enabling method chaining.</returns>
+    IGeoJSONFeatureBuilder SetBoundingBox(IEnumerable<double> values);
+
+    /// <summary>
+    /// Gets the bounding box that defines the spatial extent of the object, if available.
+    /// </summary>
+    /// <remarks>The bounding box is typically represented as an array of coordinates specifying the minimum
+    /// and maximum extents along each dimension. If the bounding box is not defined, the property returns
+    /// null.</remarks>
+    ImmutableArray<double>? BoundingBox { get; }
 }
