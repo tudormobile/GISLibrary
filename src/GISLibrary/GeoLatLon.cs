@@ -23,7 +23,7 @@ public readonly struct GeoLatLon(double latitude, double longitude) : IEquatable
     /// Determines whether the current GeoLatLon instance is equal to the specified GeoLatLon.
     /// </summary>
     /// <param name="other">The GeoLatLon to compare with the current instance.</param>
-    /// <returns><see langword="true"/> if the current instance and <paramref name="other"/> have the same X and Y coordinates;
+    /// <returns><see langword="true"/> if the current instance and <paramref name="other"/> have the same coordinates;
     /// otherwise, <see langword="false"/>.</returns>
     public bool Equals(GeoLatLon other) => Latitude == other.Latitude && Longitude == other.Longitude;
 
@@ -40,7 +40,7 @@ public readonly struct GeoLatLon(double latitude, double longitude) : IEquatable
     /// Serves as the default hash function for the current object.
     /// </summary>
     /// <remarks>Use this method when inserting instances of this type into hash-based collections such as
-    /// HashSet or Dictionary. The hash code is based on the values of the X and Y properties.</remarks>
+    /// HashSet or Dictionary. The hash code is based on the values of the Latutude and Longitude properties.</remarks>
     /// <returns>A 32-bit signed integer hash code that represents the current object.</returns>
     public override int GetHashCode() => HashCode.Combine(Latitude, Longitude);
 

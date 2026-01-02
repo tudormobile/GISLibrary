@@ -66,18 +66,16 @@ public class GeoJSONDocument
     public IDictionary<string, object> Objects => _arbitraryObjects ??= CreateObjectDictionary();
 
     /// <summary>
-    /// Gets the properties dictionary for the feature.
+    /// Gets the properties dictionary for the document.
     /// </summary>
     public IDictionary<string, JsonElement> Properties => _properties ??= CreatePropertiesDictionary();
 
     private Dictionary<string, JsonElement> CreatePropertiesDictionary()
     {
-        if (_jsonDocument is not null)
+        if (_jsonDocument is not null
+         && _jsonDocument.RootElement.TryGetProperty(GeoJSONDocument.PROPERTIES_PROPERTY, out var propertiesElement))
         {
-            if (_jsonDocument.RootElement.TryGetProperty(GeoJSONDocument.PROPERTIES_PROPERTY, out var propertiesElement))
-            {
-                return propertiesElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
-            }
+            return propertiesElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
         }
         return _propertyObjects?.ToDictionary(x => x.Key, x => JsonSerializer.SerializeToElement(x.Value)) ?? [];
     }

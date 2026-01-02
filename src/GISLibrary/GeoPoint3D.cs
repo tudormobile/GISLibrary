@@ -24,7 +24,7 @@ public readonly struct GeoPoint3D(double x, double y, double z) : IEquatable<Geo
     /// Determines whether the current GeoPoint3D instance is equal to the specified GeoPoint3D.
     /// </summary>
     /// <param name="other">The GeoPoint3D to compare with the current instance.</param>
-    /// <returns><see langword="true"/> if the current instance and <paramref name="other"/> have the same X and Y coordinates;
+    /// <returns><see langword="true"/> if the current instance and <paramref name="other"/> have the same coordinates;
     /// otherwise, <see langword="false"/>.</returns>
     public bool Equals(GeoPoint3D other) => X == other.X && Y == other.Y && Z == other.Z;
 
@@ -66,8 +66,8 @@ public readonly struct GeoPoint3D(double x, double y, double z) : IEquatable<Geo
     public static bool operator !=(GeoPoint3D left, GeoPoint3D right) => !left.Equals(right);
 
     /// <summary>
-    /// Returns a string that represents the current GeoPoint3D in the format "GeoPoint3D(X, Y)".
+    /// Returns a string that represents the current GeoPoint3D in the format "(X, Y, Z)".
     /// </summary>
-    /// <returns>A string representation of the GeoPoint3D, including its X and Y coordinates.</returns>
+    /// <returns>A string representation of the GeoPoint3D, including its X, Y, and Z coordinates.</returns>
     public override string ToString() => $"({X}, {Y}, {Z})";
 }
