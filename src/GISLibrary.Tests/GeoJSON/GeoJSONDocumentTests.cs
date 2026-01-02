@@ -9,6 +9,20 @@ namespace GISLibrary.Tests.GeoJSON;
 public class GeoJSONDocumentTests
 {
     private const string SimpleFeatureCollection = "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[1.0,2.0]},\"properties\":{\"name\":\"A\"}}]}";
+    private const string EmptyFeatureCollection = "{\"type\":\"FeatureCollection\",\"features\":[],\"properties\":{\"name\":\"A\"}}";
+
+    [TestMethod]
+    public async Task ParseFeatureCollection_LoadsProperties()
+    {
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(EmptyFeatureCollection));
+        var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
+        Assert.IsNotNull(doc);
+        var features = doc.FeatureCollection.Features;
+        Assert.HasCount(0, features);
+        Assert.HasCount(0, doc.Objects);
+        Assert.HasCount(1, doc.Properties);
+        Assert.AreEqual("A", doc.Properties["name"].GetString());
+    }
 
     [TestMethod]
     public async Task ParseFeatureCollection_LoadsFeatures()
@@ -108,6 +122,9 @@ public class GeoJSONDocumentTests
 
 
         var document = GeoJSONDocument.Create()
+        .AddProperty("creator", "GeoJSONDocumentTests")
+        .AddProperty("version", "1.0")
+        .AddObject("metadata", new { date = DateTime.UtcNow.ToString("o"), count = 3 })
         .AddFeature(f => f
             .SetGeometry([multipoly, polygon, strings])
             .AddObject("id", 4)
@@ -120,6 +137,28 @@ public class GeoJSONDocumentTests
         // Assert
         var json = Encoding.UTF8.GetString(stream.ToArray());
         Assert.Contains("GeometryCollection", json);
+
+        Assert.HasCount(2, document.Properties);
+        Assert.HasCount(1, document.Objects);
+    }
+
+    [TestMethod]
+    public async Task GetJSONDocument_SaveAsync_WithMinimalDocumentTest()
+    {
+        // Arrange
+        var stream = new MemoryStream();
+        var document = GeoJSONDocument.Create().Build();
+
+        //Act
+        await document.SaveAsync(stream, TestContext.CancellationToken);
+
+        // Assert
+        var json = Encoding.UTF8.GetString(stream.ToArray());
+        Assert.Contains("FeatureCollection", json);
+
+        Assert.HasCount(0, document.Properties);
+        Assert.HasCount(0, document.Objects);
+        Assert.HasCount(0, document.FeatureCollection.Features);
     }
 
     [TestMethod]

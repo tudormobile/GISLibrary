@@ -20,6 +20,9 @@ public class GeoJSONFileTests
         Assert.AreEqual(1, doc.FeatureCollection.Features[0].Properties["District"].GetInt64());
         Assert.AreEqual(7, doc.FeatureCollection.Features.Count(f => f.Properties["Party"].GetString() == "Republican"));
         Assert.AreEqual(19, doc.FeatureCollection.Features.Count(f => f.Properties["Party"].GetString() == "Democratic"));
+
+        Assert.IsEmpty(doc.Properties);
+        Assert.HasCount(1, doc.Objects);
     }
 
     [TestMethod]
