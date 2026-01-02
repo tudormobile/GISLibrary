@@ -1,4 +1,5 @@
-﻿using Tudormobile.GIS;
+﻿using System.Collections.Immutable;
+using Tudormobile.GIS;
 
 namespace Tudormobile.GeoJSON;
 
@@ -6,6 +7,7 @@ namespace Tudormobile.GeoJSON;
 internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
 {
     private readonly List<Func<IGeoJSONFeatureBuilder, IGeoJSONFeatureBuilder>> _features = [];
+    private ImmutableArray<double>? _boundingBox;
 
     /// <inheritdoc/>
     List<(string, object)> IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>.Properties => base._properties;
@@ -29,6 +31,7 @@ internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
         {
             var feature = featureBuilder.Build();
             doc.FeatureCollection.Features.Add(feature.Builder!.Build());
+            doc.FeatureCollection.BoundingBox = _boundingBox;
         }
         // add properties
         foreach (var (name, value) in ((IGeoJSONObjectBuilder<IGeoJSONDocumentBuilder>)this).Properties)
@@ -36,6 +39,13 @@ internal class GeoJSONDocumentBuilder : GeoJSONBuilder, IGeoJSONDocumentBuilder
             doc.AddProperty(name, value);
         }
         return doc;
+    }
+
+    /// <inheritdoc/>
+    public IGeoJSONDocumentBuilder SetBoundingBox(IEnumerable<double> values)
+    {
+        _boundingBox = values.ToImmutableArray();
+        return this;
     }
 
     /// <inheritdoc/>
@@ -79,5 +89,22 @@ public interface IGeoJSONDocumentBuilder
     /// representing the feature to add. Cannot be null.</param>
     /// <returns>The current <see cref="IGeoJSONDocumentBuilder"/> instance, enabling method chaining.</returns>
     IGeoJSONDocumentBuilder AddFeature(Func<IGeoJSONFeatureBuilder, IGeoJSONFeatureBuilder> value);
+
+    /// <summary>
+    /// Sets a bounding box to the GeoJSON document using the specified coordinate values.
+    /// </summary>
+    /// <remarks>The number and order of values in <paramref name="values"/> must match the dimensionality of
+    /// the geometry being described. Supplying an incorrect number of coordinates may result in an invalid GeoJSON
+    /// document.</remarks>
+    /// <param name="values">A sequence of double values representing the bounding box coordinates. The values should be provided in the
+    /// order required by the GeoJSON specification (e.g., [west, south, east, north] for 2D, or [west, south, minZ,
+    /// east, north, maxZ] for 3D).</param>
+    /// <returns>The current instance of the <see cref="IGeoJSONDocumentBuilder"/>, enabling method chaining.</returns>
+    /// <remarks>
+    /// A bounding box is normally set on geometry elements, but when set on the FeatureCollection level, it
+    /// applies to all features within the collection.
+    /// </remarks>
+    IGeoJSONDocumentBuilder SetBoundingBox(IEnumerable<double> values);
+
 }
 

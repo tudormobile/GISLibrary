@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Immutable;
+using System.Text.Json;
 
 namespace Tudormobile.GeoJSON;
 
@@ -9,6 +10,8 @@ public class GeoJSONFeatureCollection
 {
     private readonly JsonElement _rootElement;
     private List<GeoJSONFeature>? _features;
+    private ImmutableArray<double>? _boundingBox;
+
     internal GeoJSONFeatureCollection() { _features = []; }
 
     /// <summary>
@@ -29,6 +32,17 @@ public class GeoJSONFeatureCollection
     /// Gets the list of features in the collection.
     /// </summary>
     public IList<GeoJSONFeature> Features => _features ??= GetFeatures();
+
+    /// <summary>
+    /// Gets the bounding box coordinates for the associated object, if available.
+    /// </summary>
+    public ImmutableArray<double>? BoundingBox
+    {
+        get => _rootElement.ValueKind != JsonValueKind.Undefined && _rootElement.TryGetProperty(GeoJSONDocument.BBOX_PROPERTY, out var bboxElement)
+        ? GeoJSONBoundingBox.Parse(bboxElement)
+        : _boundingBox;
+        internal set => _boundingBox = value;
+    }
 
     private List<GeoJSONFeature> GetFeatures()
     {
