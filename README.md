@@ -1,7 +1,7 @@
 # GISLibrary
 
 [![Build, Test, and Deploy](https://github.com/tudormobile/GISLibrary/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/tudormobile/GISLibrary/actions/workflows/dotnet.yml) 
-[![Documentation](https://github.com/tudormobile/GISLibrary/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/tudormobile/GISLibrary/actions/workflows/docs.yml)  
+[![Documentation](https://github.com/tudormobile/GISLibrary/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/tudormobile/GISLibrary/actions/workflows/docs.yml)  
 
 COPYRIGHT(C)2026 BILL TUDOR  
 
