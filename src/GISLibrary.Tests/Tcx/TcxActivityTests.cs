@@ -165,7 +165,7 @@ public class TcxActivityTests
     }
 
     [TestMethod]
-    public void Laps_WithSingleLap_ReturnsOnelap()
+    public void Laps_WithSingleLap_ReturnsOneLap()
     {
         // Arrange
         var xml = @"
