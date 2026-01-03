@@ -15,8 +15,8 @@ public class GeoJSONDocumentTests
     [TestMethod]
     public async Task ParseFeatureCollection_LoadsProperties()
     {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(EmptyFeatureCollection));
-        var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
+        using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(EmptyFeatureCollection));
+        using var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
         Assert.IsNotNull(doc);
         var features = doc.FeatureCollection.Features;
         Assert.HasCount(0, features);
@@ -78,7 +78,7 @@ public class GeoJSONDocumentTests
         try
         {
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(SimpleFeatureCollection));
-            var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
+            using var doc = await GeoJSONDocument.ParseAsync(stream, TestContext.CancellationToken);
             var file = new GeoJSONFile(temp);
             await file.WriteDocumentAsync(doc, TestContext.CancellationToken);
             Assert.IsTrue(file.Exists());

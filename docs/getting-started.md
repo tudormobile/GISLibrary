@@ -5,7 +5,7 @@
 dotnet add package Tudormobile.GISLibrary
 ```
 ### Dependencies
-Microsoft.Extensions.Logging
+None.
 
 ### Including library provided services
 ```cs

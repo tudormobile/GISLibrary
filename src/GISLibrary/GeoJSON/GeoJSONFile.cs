@@ -9,6 +9,13 @@
 /// <param name="path">The path to the GeoJSON file.</param>
 public class GeoJSONFile(string path)
 {
+    /// <summary>
+    /// Gets the file system path associated with this instance.
+    /// </summary>
+    public string Path
+        => !string.IsNullOrWhiteSpace(path)
+            ? path
+            : throw new ArgumentException("Path cannot be null, empty, or whitespace.", nameof(path));
 
     /// <summary>
     /// Determines whether the file exists.

@@ -11,7 +11,6 @@ dotnet add package Tudormobile.GISLibrary
 **NONE**
 
 ### Dependencies
-Microsoft.Extensions.Logging  
-Microsoft.Extensions.Http  
+**NONE**
 
 **Tudormobile.GISLibrary** is released as open source under the MIT license. Bug reports and contributions can be made at [the GitHub repository](https://github.com/tudormobile/GISLibrary). :link:
