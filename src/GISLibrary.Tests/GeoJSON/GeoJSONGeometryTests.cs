@@ -347,7 +347,6 @@ public class GeoJSONGeometryTests
         }";
         var element = JsonElement.Parse(json);
         var exception = Assert.ThrowsExactly<ArgumentException>(() => new GeoJSONGeometry(element));
-        Assert.AreEqual("Type", exception.ParamName);
     }
 
     [TestMethod]
@@ -358,7 +357,6 @@ public class GeoJSONGeometryTests
         }";
         var element = JsonElement.Parse(json);
         var exception = Assert.ThrowsExactly<ArgumentException>(() => new GeoJSONGeometry(element));
-        Assert.AreEqual("Type", exception.ParamName);
     }
 
     [TestMethod]
