@@ -67,7 +67,7 @@ public class GeoPathTests
     }
 
     [TestMethod]
-    public void Addlocation_AddsPositionToPath()
+    public void AddLocation_AddsPositionToPath()
     {
         var geoPath = new GeoPath();
         geoPath.Add(new GeoLocation(10.0, 20.0));
