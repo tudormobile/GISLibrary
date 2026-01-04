@@ -62,8 +62,8 @@ The library utilizes some base types to facilitate constructing and exporting Ge
 The `IGeoJSONDocumentBuilder` interface provides a fluent interface for constructing GeoJSON documents programmatically. 
 Use the ***Create()*** static method on the `GeoJSONDocument` class to obtain an instance of the builder. Methods
 are provided to add properties, foreign members (objects), and various GeoJSON geometries (*features*) to the document. The GeoJSON geometries can also include properties, bounding-box values, and foreign members in addition to their types and coordinates values.  
-- `IGeoJSONDocumentBuilder`: Adds features to a document. Obtain via ***GeoJSONDocument.Create()***. Also adds properties (via *AddProperty()*) and foreign members (via *AddOject()*).
-- `IGeoJSONFeatureBuilder`: Creates features from Geometries. Implicitly created via the ***AddFeature()*** method on the document builder for a given geometry. Also adds properties (via *AddProperty()*) and foreign members (via *AddOject()*).
+- `IGeoJSONDocumentBuilder`: Adds features to a document. Obtain via ***GeoJSONDocument.Create()***. Also adds properties (via *AddProperty()*) and foreign members (via *AddObject()*).
+- `IGeoJSONFeatureBuilder`: Creates features from Geometries. Implicitly created via the ***AddFeature()*** method on the document builder for a given geometry. Also adds properties (via *AddProperty()*) and foreign members (via *AddObject()*).
 
 Example:
 ```cs
