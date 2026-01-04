@@ -7,7 +7,7 @@
 /// <param name="longitude">The longitude component of the geographic coordinate, in decimal degrees. Valid values are between -180.0 and
 /// 180.0.</param>
 /// </summary>
-public readonly struct GeoLatLon(double latitude, double longitude) : IEquatable<GeoLatLon>
+public readonly struct GeoLocation(double latitude, double longitude) : IEquatable<GeoLocation>
 {
     /// <summary>
     /// Gets or sets the latitude component of the geographic coordinate.
@@ -25,7 +25,7 @@ public readonly struct GeoLatLon(double latitude, double longitude) : IEquatable
     /// <param name="other">The GeoLatLon to compare with the current instance.</param>
     /// <returns><see langword="true"/> if the current instance and <paramref name="other"/> have the same coordinates;
     /// otherwise, <see langword="false"/>.</returns>
-    public bool Equals(GeoLatLon other) => Latitude == other.Latitude && Longitude == other.Longitude;
+    public bool Equals(GeoLocation other) => Latitude == other.Latitude && Longitude == other.Longitude;
 
     /// <summary>
     /// Determines whether the specified object is equal to the current GeoLatLon instance.
@@ -34,7 +34,7 @@ public readonly struct GeoLatLon(double latitude, double longitude) : IEquatable
     /// instances.</remarks>
     /// <param name="obj">The object to compare with the current GeoLatLon. Can be null.</param>
     /// <returns>true if the specified object is a GeoLatLon and has the same values as the current instance; otherwise, false.</returns>
-    public override bool Equals(object? obj) => obj is GeoLatLon p && Equals(p);
+    public override bool Equals(object? obj) => obj is GeoLocation p && Equals(p);
 
     /// <summary>
     /// Serves as the default hash function for the current object.
@@ -52,7 +52,7 @@ public readonly struct GeoLatLon(double latitude, double longitude) : IEquatable
     /// <param name="left">The first GeoLatLon to compare.</param>
     /// <param name="right">The second GeoLatLon to compare.</param>
     /// <returns>true if the values of left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(GeoLatLon left, GeoLatLon right) => left.Equals(right);
+    public static bool operator ==(GeoLocation left, GeoLocation right) => left.Equals(right);
 
     /// <summary>
     /// Determines whether two GeoLatLon instances are not equal.
@@ -62,7 +62,7 @@ public readonly struct GeoLatLon(double latitude, double longitude) : IEquatable
     /// <param name="left">The first GeoLatLon to compare.</param>
     /// <param name="right">The second GeoLatLon to compare.</param>
     /// <returns>true if the specified GeoLatLon instances are not equal; otherwise, false.</returns>
-    public static bool operator !=(GeoLatLon left, GeoLatLon right) => !left.Equals(right);
+    public static bool operator !=(GeoLocation left, GeoLocation right) => !left.Equals(right);
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>

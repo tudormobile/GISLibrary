@@ -1,14 +1,14 @@
 ﻿namespace Tudormobile.GIS;
 
 /// <summary>
-/// Represents a geographic location specified by latitude, longitude, and altitude coordinates.
+/// Represents a geographic position specified by latitude, longitude, and altitude coordinates.
 /// </summary>
 /// <param name="latitude">The latitude component of the geographic coordinate, in decimal degrees. Valid values are between -90.0 and
 /// 90.0.</param>
 /// <param name="longitude">The longitude component of the geographic coordinate, in decimal degrees. Valid values are between -180.0 and
 /// 180.0.</param>
 /// <param name="altitude">The altitude value.</param>
-public readonly struct GeoLatLonAlt(double latitude, double longitude, double altitude) : IEquatable<GeoLatLonAlt>
+public readonly struct GeoPosition(double latitude, double longitude, double altitude) : IEquatable<GeoPosition>
 {
     /// <summary>
     /// Gets or sets the latitude component of the geographic coordinate.
@@ -31,7 +31,7 @@ public readonly struct GeoLatLonAlt(double latitude, double longitude, double al
     /// <param name="other">The GeoLatLonAlt value to compare with the current instance.</param>
     /// <returns>true if the current instance and the specified value have the same latitude, longitude, and altitude; otherwise,
     /// false.</returns>
-    public bool Equals(GeoLatLonAlt other)
+    public bool Equals(GeoPosition other)
     {
         return Latitude == other.Latitude &&
                Longitude == other.Longitude &&
@@ -46,7 +46,7 @@ public readonly struct GeoLatLonAlt(double latitude, double longitude, double al
     /// <param name="obj">The object to compare with the current GeoLatLonAlt instance.</param>
     /// <returns><see langword="true"/> if the specified object is a GeoLatLonAlt and is equal to the current instance;
     /// otherwise, <see langword="false"/>.</returns>
-    public override bool Equals(object? obj) => obj is GeoLatLonAlt other && Equals(other);
+    public override bool Equals(object? obj) => obj is GeoPosition other && Equals(other);
 
     /// <summary>
     /// Serves as the default hash function for the object.
@@ -64,7 +64,7 @@ public readonly struct GeoLatLonAlt(double latitude, double longitude, double al
     /// <param name="left">The first GeoLatLonAlt instance to compare.</param>
     /// <param name="right">The second GeoLatLonAlt instance to compare.</param>
     /// <returns>true if the specified GeoLatLonAlt instances are equal; otherwise, false.</returns>
-    public static bool operator ==(GeoLatLonAlt left, GeoLatLonAlt right) => left.Equals(right);
+    public static bool operator ==(GeoPosition left, GeoPosition right) => left.Equals(right);
 
     /// <summary>
     /// Determines whether two GeoLatLonAlt instances are not equal.
@@ -73,7 +73,7 @@ public readonly struct GeoLatLonAlt(double latitude, double longitude, double al
     /// <param name="left">The first GeoLatLonAlt instance to compare.</param>
     /// <param name="right">The second GeoLatLonAlt instance to compare.</param>
     /// <returns>true if the specified instances are not equal; otherwise, false.</returns>
-    public static bool operator !=(GeoLatLonAlt left, GeoLatLonAlt right) => !left.Equals(right);
+    public static bool operator !=(GeoPosition left, GeoPosition right) => !left.Equals(right);
 
     /// <summary>
     /// Returns a string that represents the current geographic coordinates, including latitude, longitude, and

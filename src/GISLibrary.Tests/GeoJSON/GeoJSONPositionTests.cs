@@ -6,6 +6,43 @@ namespace GISLibrary.Tests.GeoJSON;
 public class GeoJSONPositionTests
 {
     [TestMethod]
+    public void GeoJSONPosition_DefaultConstructor()
+    {
+        var position = new GeoJSONPosition();
+        Assert.AreEqual(0.0, position.Latitude);
+        Assert.AreEqual(0.0, position.Longitude);
+        Assert.IsNull(position.Altitude);
+    }
+
+    [TestMethod]
+    public void GeoJSONPosition_ConstructWithInvalidLatitude_Throws()
+    {
+        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new GeoJSONPosition(100.0, 20.0));
+        Assert.AreEqual("Latitude must be between -90 and 90 degrees. (Parameter 'latitude')", exception.Message);
+    }
+
+    [TestMethod]
+    public void GeoJSONPosition_ConstructWithInvalidLongitude_Throws()
+    {
+        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new GeoJSONPosition(10.0, 200.0));
+        Assert.AreEqual("Longitude must be between -180 and 180 degrees. (Parameter 'longitude')", exception.Message);
+    }
+
+    [TestMethod]
+    public void GeoJSONPosition_ConstructWithInvalidNegativeLatitude_Throws()
+    {
+        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new GeoJSONPosition(-100.0, 20.0));
+        Assert.AreEqual("Latitude must be between -90 and 90 degrees. (Parameter 'latitude')", exception.Message);
+    }
+
+    [TestMethod]
+    public void GeoJSONPosition_ConstructWithInvalidNegativeLongitude_Throws()
+    {
+        var exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new GeoJSONPosition(10.0, -200.0));
+        Assert.AreEqual("Longitude must be between -180 and 180 degrees. (Parameter 'longitude')", exception.Message);
+    }
+
+    [TestMethod]
     public void GeoJSONPosition_ConstructWithValues()
     {
         var position = new GeoJSONPosition(10.0, 20.0, 5.0);

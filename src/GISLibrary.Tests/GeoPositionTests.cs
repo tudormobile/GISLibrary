@@ -3,7 +3,7 @@
 namespace GISLibrary.Tests;
 
 [TestClass]
-public class GeoLatLonAltTests
+public class GeoPositionTests
 {
     [TestMethod]
     public void Constructor_WithLatitudeLongitudeAltitude_SetsProperties()
@@ -14,7 +14,7 @@ public class GeoLatLonAltTests
         double altitude = 3.0;
 
         // act
-        var pos = new GeoLatLonAlt(latitude, longitude, altitude);
+        var pos = new GeoPosition(latitude, longitude, altitude);
 
         // assert
         Assert.AreEqual(longitude, pos.Longitude);
@@ -26,8 +26,8 @@ public class GeoLatLonAltTests
     public void Equals_WithSameValues_ReturnsTrue()
     {
         // arrange
-        var pos1 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        var pos2 = new GeoLatLonAlt(1.0, 2.0, 3.0);
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        var pos2 = new GeoPosition(1.0, 2.0, 3.0);
 
         // act
         bool result = pos1.Equals(pos2);
@@ -40,8 +40,8 @@ public class GeoLatLonAltTests
     public void Equals_WithDifferentLatitude_ReturnsFalse()
     {
         // arrange
-        var pos1 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        var pos2 = new GeoLatLonAlt(1.1, 2.0, 3.0);
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        var pos2 = new GeoPosition(1.1, 2.0, 3.0);
 
         // act
         bool result = pos1.Equals(pos2);
@@ -54,8 +54,8 @@ public class GeoLatLonAltTests
     public void Equals_WithDifferentLongitude_ReturnsFalse()
     {
         // arrange
-        var pos1 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        var pos2 = new GeoLatLonAlt(1.0, 2.1, 3.0);
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        var pos2 = new GeoPosition(1.0, 2.1, 3.0);
 
         // act
         bool result = pos1.Equals(pos2);
@@ -68,8 +68,8 @@ public class GeoLatLonAltTests
     public void Equals_WithDifferentAltitude_ReturnsFalse()
     {
         // arrange
-        var pos1 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        var pos2 = new GeoLatLonAlt(1.0, 2.0, 3.1);
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        var pos2 = new GeoPosition(1.0, 2.0, 3.1);
 
         // act
         bool result = pos1.Equals(pos2);
@@ -82,9 +82,9 @@ public class GeoLatLonAltTests
     public void Equals_WithNull_ReturnsFalse()
     {
         // arrange
-        var pos = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        object pos2 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        object pos3 = new GeoLatLonAlt(2.0, 3.0, 4.0);
+        var pos = new GeoPosition(1.0, 2.0, 3.0);
+        object pos2 = new GeoPosition(1.0, 2.0, 3.0);
+        object pos3 = new GeoPosition(2.0, 3.0, 4.0);
         object pos4 = pos;
         object pos5 = null!;
 
@@ -99,7 +99,7 @@ public class GeoLatLonAltTests
     public void Equals_WithObject_ReturnsTrueOrFalse()
     {
         // arrange
-        var pos = new GeoLatLonAlt(1.0, 2.0, 3.0);
+        var pos = new GeoPosition(1.0, 2.0, 3.0);
 
         // act
         bool result = pos.Equals(null);
@@ -113,8 +113,8 @@ public class GeoLatLonAltTests
     public void EqualsOperator_WithSameValues_ReturnsTrue()
     {
         // arrange
-        var pos1 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        var pos2 = new GeoLatLonAlt(1.0, 2.0, 3.0);
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        var pos2 = new GeoPosition(1.0, 2.0, 3.0);
 
         // act
         bool result = pos1 == pos2;
@@ -127,8 +127,8 @@ public class GeoLatLonAltTests
     public void NotEqualsOperator_WithDifferentValues_ReturnsTrue()
     {
         // arrange
-        var pos1 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        var pos2 = new GeoLatLonAlt(1.1, 2.0, 3.0);
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        var pos2 = new GeoPosition(1.1, 2.0, 3.0);
 
         // act
         bool result = pos1 != pos2;
@@ -141,8 +141,8 @@ public class GeoLatLonAltTests
     public void GetHashCode_WithSameValues_ReturnsSameHashCode()
     {
         // arrange
-        var pos1 = new GeoLatLonAlt(1.0, 2.0, 3.0);
-        var pos2 = new GeoLatLonAlt(1.0, 2.0, 3.0);
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        var pos2 = new GeoPosition(1.0, 2.0, 3.0);
 
         // act
         int hash1 = pos1.GetHashCode();
@@ -156,7 +156,7 @@ public class GeoLatLonAltTests
     public void ToString_ReturnsFormattedString()
     {
         // arrange
-        var pos = new GeoLatLonAlt(1.0, 2.0, 3.0);
+        var pos = new GeoPosition(1.0, 2.0, 3.0);
 
         // act
         string result = pos.ToString();

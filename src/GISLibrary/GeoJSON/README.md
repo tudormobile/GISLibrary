@@ -11,7 +11,7 @@ Ref: [GeoJSON Specification](https://tools.ietf.org/html/rfc7946) RFC7946
 - All Geometry Objects, including GeometryCollection
 - Bounding box options
 - Properties
-- Arbitrary objects (members)
+- Arbitrary objects (Foreign Members)
 - Reading, creating, and writing GeoJSON documents and files
 
 ## GeoJSON Documents
@@ -61,9 +61,9 @@ The library utilizes some base types to facilitate constructing and exporting Ge
 ## GeoJSON Builders
 The `IGeoJSONDocumentBuilder` interface provides a fluent interface for constructing GeoJSON documents programmatically. 
 Use the ***Create()*** static method on the `GeoJSONDocument` class to obtain an instance of the builder. Methods
-are provided to add properties, arbitrary data (objects), and various GeoJSON geometries (*features*) to the document. The GeoJSON geometries can also include properties, bounding-box values, and arbitrary objects in addition to their types and coordinates values.  
-- `IGeoJSONDocumentBuilder`: Adds features to a document. Obtain via ***GeoJSONDocument.Create()***. Also adds properties and objects.
-- `IGeoJSONFeatureBuilder`: Creates features from Geometries. Implicitly created via the ***AddFeature()*** method on the document builder for a given geometry. Also adds properties and objects.
+are provided to add properties, foreign members (objects), and various GeoJSON geometries (*features*) to the document. The GeoJSON geometries can also include properties, bounding-box values, and foreign members in addition to their types and coordinates values.  
+- `IGeoJSONDocumentBuilder`: Adds features to a document. Obtain via ***GeoJSONDocument.Create()***. Also adds properties (via *AddProperty()*) and foreign members (via *AddOject()*).
+- `IGeoJSONFeatureBuilder`: Creates features from Geometries. Implicitly created via the ***AddFeature()*** method on the document builder for a given geometry. Also adds properties (via *AddProperty()*) and foreign members (via *AddOject()*).
 
 Example:
 ```cs
