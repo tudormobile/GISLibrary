@@ -16,7 +16,7 @@ public class GeoJSONFileTests
     }
 
     [TestMethod]
-    public void GeoJSONFile_ConstructWithWithspace_Throws()
+    public void GeoJSONFile_ConstructorWithWhitespace_Throws()
     {
         var path = "\t\t  \t";
         var file = new GeoJSONFile(path);
