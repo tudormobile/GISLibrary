@@ -12,6 +12,7 @@ public class GeoJSONFeature
     private readonly IGeoJSONFeatureBuilder? _builder;
 
     private IDictionary<string, JsonElement>? _properties;
+    private IDictionary<string, object>? _foreignMembers;
 
     internal GeoJSONFeature(IGeoJSONFeatureBuilder builder) { _builder = builder; }
     internal IGeoJSONFeatureBuilder? Builder => _builder;
@@ -34,6 +35,13 @@ public class GeoJSONFeature
             return _builder?.BoundingBox;
         }
     }
+
+    /// <summary>
+    /// Gets the collection of JSON objects associated with their string keys.
+    /// </summary>
+    /// <remarks>The returned dictionary provides access to the underlying JSON elements by key. Modifications
+    /// to the dictionary affect the set of available objects. The property never returns null.</remarks>
+    public IDictionary<string, object> Objects => _foreignMembers ??= CreateObjectDictionary();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoJSONFeature"/> class from a JSON element.
@@ -60,4 +68,20 @@ public class GeoJSONFeature
     public IDictionary<string, JsonElement> Properties => _properties
         ??= _featureElement.GetProperty(GeoJSONDocument.PROPERTIES_PROPERTY).EnumerateObject()
             .ToDictionary(x => x.Name, x => x.Value);
+
+    private Dictionary<string, object> CreateObjectDictionary()
+    {
+        var dict = new Dictionary<string, object>();
+        foreach (var property in _featureElement.EnumerateObject())
+        {
+            if (property.Name != GeoJSONDocument.TYPE_PROPERTY
+                && property.Name != GeoJSONDocument.PROPERTIES_PROPERTY
+                && property.Name != GeoJSONDocument.GEOMETRY_PROPERTY
+                && property.Name != GeoJSONDocument.BBOX_PROPERTY)
+            {
+                dict[property.Name] = property.Value;
+            }
+        }
+        return dict;
+    }
 }

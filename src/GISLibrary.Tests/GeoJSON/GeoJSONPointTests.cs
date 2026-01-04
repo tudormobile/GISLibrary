@@ -6,6 +6,15 @@ namespace GISLibrary.Tests.GeoJSON;
 public class GeoJSONPointTests
 {
     [TestMethod]
+    public void GeoJSONPoint_DefaultConstructor()
+    {
+        var point = new GeoJSONPoint();
+        Assert.AreEqual(0.0, point.Position.Latitude);
+        Assert.AreEqual(0.0, point.Position.Longitude);
+        Assert.IsNull(point.Position.Altitude);
+    }
+
+    [TestMethod]
     public void GeoJSONPoint_ConstructWithValues()
     {
         var point = new GeoJSONPoint(10.0, 20.0, 5.0);
@@ -23,6 +32,20 @@ public class GeoJSONPointTests
         Assert.AreEqual(20.0, point.Position.Longitude);
         Assert.IsNull(position.Altitude);
     }
+
+    [TestMethod]
+    public void GeoJSONPoint_ConstructRecordWithPosition()
+    {
+        var position = new GeoJSONPosition(10.0, 20.0);
+        var point = new GeoJSONPoint(position);
+        var point2 = point with { };
+        Assert.AreEqual(10.0, point.Position.Latitude);
+        Assert.AreEqual(20.0, point.Position.Longitude);
+        Assert.AreEqual(10.0, point2.Position.Latitude);
+        Assert.AreEqual(20.0, point2.Position.Longitude);
+        Assert.IsNull(position.Altitude);
+    }
+
 
     [TestMethod]
     public void GeoJSONPoint_ImplicityCastToPosition()

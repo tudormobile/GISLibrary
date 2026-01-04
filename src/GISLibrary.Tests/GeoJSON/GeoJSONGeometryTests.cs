@@ -375,4 +375,12 @@ public class GeoJSONGeometryTests
         var exception = Assert.ThrowsExactly<NotSupportedException>(() => geometry.Coordinates);
         Assert.AreEqual("Geometry type '999' is not supported.", exception.Message);
     }
+
+    [TestMethod]
+    public void GeoJSONGeometry_ConstructWithNullGeometry_ReturnsUnlocatedGeometry()
+    {
+        var element = JsonElement.Parse("null");
+        var geometry = new GeoJSONGeometry(element);
+        Assert.AreEqual("Unlocated", geometry.Type);
+    }
 }

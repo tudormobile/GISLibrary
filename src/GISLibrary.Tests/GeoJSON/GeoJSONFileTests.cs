@@ -8,6 +8,23 @@ public class GeoJSONFileTests
     public TestContext TestContext { get; set; }
 
     [TestMethod]
+    public void GeoJSONFile_Constructor_SetsPath()
+    {
+        var path = "sample.geojson";
+        var file = new GeoJSONFile(path);
+        Assert.AreEqual(path, file.Path);
+    }
+
+    [TestMethod]
+    public void GeoJSONFile_ConstructorWithWhitespace_Throws()
+    {
+        var path = "\t\t  \t";
+        var file = new GeoJSONFile(path);
+        var exception = Assert.ThrowsExactly<ArgumentException>(() => file.Path);
+        Assert.AreEqual("Path cannot be null, empty, or whitespace. (Parameter 'path')", exception.Message);
+    }
+
+    [TestMethod]
     [DeploymentItem("NYS_Congressional_Districts.geojson")]
     public async Task GeoJSONFile_WithSampleFile_ReadDocumentSucceeds()
     {
@@ -23,6 +40,7 @@ public class GeoJSONFileTests
 
         Assert.IsEmpty(doc.Properties);
         Assert.HasCount(1, doc.Objects);
+        Assert.HasCount(1, doc.FeatureCollection.Features[0].Objects);
     }
 
     [TestMethod]

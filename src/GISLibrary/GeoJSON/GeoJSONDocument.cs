@@ -20,6 +20,7 @@ public class GeoJSONDocument : IDisposable
     /// </summary>
     internal enum GeoJSONGeometryType
     {
+        Unlocated,
         Point,
         MultiPoint,
         LineString,
@@ -34,7 +35,7 @@ public class GeoJSONDocument : IDisposable
     private IDictionary<string, JsonElement>? _properties;
     private IDictionary<string, object>? _propertyObjects;
     private List<(string, object)>? _objects;
-    private IDictionary<string, object>? _arbitraryObjects;
+    private IDictionary<string, object>? _foreignMembers;
 
     /// <summary>
     /// Creates a new instance of the IGeoJSONDocumentBuilder for constructing GeoJSON documents.
@@ -72,7 +73,7 @@ public class GeoJSONDocument : IDisposable
     /// </summary>
     /// <remarks>The returned dictionary provides access to the underlying JSON elements by key. Modifications
     /// to the dictionary affect the set of available objects. The property never returns null.</remarks>
-    public IDictionary<string, object> Objects => _arbitraryObjects ??= CreateObjectDictionary();
+    public IDictionary<string, object> Objects => _foreignMembers ??= CreateObjectDictionary();
 
     /// <summary>
     /// Gets the properties dictionary for the document.
@@ -96,7 +97,10 @@ public class GeoJSONDocument : IDisposable
             var dict = new Dictionary<string, object>();
             foreach (var property in _jsonDocument.RootElement.EnumerateObject())
             {
-                if (property.Name != TYPE_PROPERTY && property.Name != FEATURES_PROPERTY && property.Name != PROPERTIES_PROPERTY)
+                if (property.Name != TYPE_PROPERTY
+                    && property.Name != FEATURES_PROPERTY
+                    && property.Name != PROPERTIES_PROPERTY
+                    && property.Name != BBOX_PROPERTY)
                 {
                     dict[property.Name] = property.Value;
                 }

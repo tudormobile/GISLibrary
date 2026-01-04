@@ -18,11 +18,15 @@ public class GeoJSONGeometry
     /// <exception cref="ArgumentException">Thrown when the provided element is not a known Geometry.</exception>
     public GeoJSONGeometry(JsonElement geometryElement)
     {
-        if (!geometryElement.TryGetProperty(GeoJSONDocument.TYPE_PROPERTY, out var typeProperty)
-            || !Enum.TryParse<GeoJSONDocument.GeoJSONGeometryType>(typeProperty.GetString(), out var geometryType)
-            )
+        var geometryType = GeoJSONDocument.GeoJSONGeometryType.Unlocated;
+        if (geometryElement.ValueKind != JsonValueKind.Null)
         {
-            throw new ArgumentException("The provided JSON element is not a known Geometry.");
+            if (!geometryElement.TryGetProperty(GeoJSONDocument.TYPE_PROPERTY, out var typeProperty)
+                || !Enum.TryParse<GeoJSONDocument.GeoJSONGeometryType>(typeProperty.GetString(), out geometryType)
+                )
+            {
+                throw new ArgumentException("The provided JSON element is not a known Geometry.");
+            }
         }
         _geometryType = geometryType;
         _geometryElement = geometryElement;

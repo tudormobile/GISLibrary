@@ -200,9 +200,10 @@ public class GeoJSONDocumentTests
 }";
         var jsonDoc = JsonDocument.Parse(json);
         var geoJsonDoc = new GeoJSONDocument(jsonDoc);
+        var expected = new double[] { 1.0, 2.0 };
 
         Assert.IsNotNull(geoJsonDoc.FeatureCollection.Features[0].BoundingBox);
-        CollectionAssert.AreEqual(new double[] { 1.0, 2.0 }, geoJsonDoc.FeatureCollection.Features[0].BoundingBox);
+        CollectionAssert.AreEqual(expected, geoJsonDoc.FeatureCollection.Features[0].BoundingBox);
     }
 
     [TestMethod]
@@ -218,6 +219,24 @@ public class GeoJSONDocumentTests
         //Act & Assert
         _ = Assert.ThrowsExactlyAsync<NotImplementedException>(async () => await document.SaveAsync(stream, TestContext.CancellationToken));
     }
+
+    [TestMethod]
+    public void GeoJSONDocument_ConstructWithNull_CanDispose()
+    {
+        var document = new GeoJSONDocument();
+        Assert.IsEmpty(document.FeatureCollection.Features);
+        document.Dispose();
+    }
+
+    [TestMethod]
+    public void GeoJSONDocument_ConstructWithNullDocument_CanDispose()
+    {
+        JsonDocument jsonDocument = null!;
+        var document = new GeoJSONDocument(jsonDocument);
+        Assert.IsEmpty(document.FeatureCollection.Features);
+        document.Dispose();
+    }
+
 
     public TestContext TestContext { get; set; }
 }
