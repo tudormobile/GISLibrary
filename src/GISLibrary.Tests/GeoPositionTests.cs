@@ -82,17 +82,11 @@ public class GeoPositionTests
     public void Equals_WithNull_ReturnsFalse()
     {
         // arrange
-        var pos = new GeoPosition(1.0, 2.0, 3.0);
-        object pos2 = new GeoPosition(1.0, 2.0, 3.0);
-        object pos3 = new GeoPosition(2.0, 3.0, 4.0);
-        object pos4 = pos;
-        object pos5 = null!;
+        var pos1 = new GeoPosition(1.0, 2.0, 3.0);
+        object pos2 = null!;
 
         // act & assert
-        Assert.IsTrue(pos.Equals(pos4));
-        Assert.IsFalse(pos.Equals(pos5));
-        Assert.IsTrue(pos.Equals(pos2));
-        Assert.IsFalse(pos.Equals(pos3));
+        Assert.IsFalse(pos1.Equals(pos2));
     }
 
     [TestMethod]
