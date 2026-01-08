@@ -7,6 +7,42 @@ namespace GISLibrary.Tests.Tcx;
 public class TcxDocumentTests
 {
     [TestMethod]
+    public void Constructor_WithMinimalTcxDocument_ShouldInitialize()
+    {
+        // Arrange
+        var tcxXml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<TrainingCenterDatabase xmlns=""http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"">
+    <Activities>
+    </Activities>
+</TrainingCenterDatabase>";
+        var xdoc = XDocument.Parse(tcxXml);
+
+        // Act
+        var tcxDoc = new TcxDocument(xdoc);
+
+        // Assert
+        Assert.IsNotNull(tcxDoc);
+        Assert.IsEmpty(tcxDoc.Activities);
+    }
+
+    [TestMethod]
+    public void Constructor_WithEmptyTcxDocument_ShouldInitialize()
+    {
+        // Arrange
+        var tcxXml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<TrainingCenterDatabase xmlns=""http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"">
+</TrainingCenterDatabase>";
+        var xdoc = XDocument.Parse(tcxXml);
+
+        // Act
+        var tcxDoc = new TcxDocument(xdoc);
+
+        // Assert
+        Assert.IsNotNull(tcxDoc);
+        Assert.IsEmpty(tcxDoc.Activities);
+    }
+
+    [TestMethod]
     public void Constructor_WithValidTcxDocument_ShouldInitialize()
     {
         // Arrange

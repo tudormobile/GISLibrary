@@ -16,18 +16,22 @@ namespace Tudormobile.Kml;
 /// </remarks>
 public class KmlReader : IDisposable
 {
-    private const string KLM_Document_Namespace = "http://www.opengis.net/kml/2.2";
-    private const string Folder_Element_Name = "Folder";
-    private const string Name_Element_Name = "name";
-    private const string Description_Element_Name = "description";
-    private const string Point_Element_Name = "Point";
-    private const string Polygon_Element_Name = "Polygon";
-    private const string LineString_Element_Name = "LineString";
-    private const string Coordinates_Element_Name = "coordinates";
-    private const string Placemark_Element_Name = "Placemark";
-    private const string Id_Attribute_Name = "id";
-    private const string Document_Element_Name = "Document";
-    private XmlReader _xmlReader;
+    internal const string KLM_Document_Namespace = "http://www.opengis.net/kml/2.2";
+    internal const string Root_Element_Name = "kml";
+    internal const string Document_Element_Name = "Document";
+    internal const string Folder_Element_Name = "Folder";
+    internal const string Placemark_Element_Name = "Placemark";
+    internal const string Id_Attribute_Name = "id";
+    internal const string Name_Element_Name = "name";
+    internal const string Description_Element_Name = "description";
+    internal const string Point_Element_Name = "Point";
+    internal const string Polygon_Element_Name = "Polygon";
+    internal const string LineString_Element_Name = "LineString";
+    internal const string Coordinates_Element_Name = "coordinates";
+    internal const string OuterBoundaryIs_Element_Name = "outerBoundaryIs";
+    internal const string InnerBoundaryIs_Element_Name = "innerBoundaryIs";
+    internal const string LinearRing_Element_Name = "LinearRing";
+    private readonly XmlReader _xmlReader;
     private KmlReader(XmlReader xmlReader) { _xmlReader = xmlReader; }
 
     /// <summary>
@@ -159,7 +163,7 @@ public class KmlReader : IDisposable
             : throw new InvalidOperationException("Placemark geometry could not be read.");
     }
 
-    private KmlGeometry? ReadPointGeometry()
+    private KmlPoint? ReadPointGeometry()
     {
         KmlPoint? point = null;
         _xmlReader.ReadStartElement(Point_Element_Name, KLM_Document_Namespace);
@@ -176,7 +180,7 @@ public class KmlReader : IDisposable
                     double altitude = 0;
                     if (coords.Length >= 3)
                     {
-                        double.TryParse(coords[2], out altitude);
+                        _ = double.TryParse(coords[2], out altitude);
                     }
                     point = new KmlPoint(latitude, longitude, altitude);
                 }
@@ -190,15 +194,97 @@ public class KmlReader : IDisposable
         return point;
     }
 
-    private KmlGeometry? ReadPolygonGeometry()
+    private KmlPolygon? ReadPolygonGeometry()
     {
-        KmlPolygon? polygon = null;
-        return polygon;
+        List<(double, double, double)>? outerBoundary = null;
+        List<(double, double, double)>? innerBoundary = null;
+        _xmlReader.ReadStartElement(Polygon_Element_Name, KLM_Document_Namespace);
+        while (_xmlReader.IsStartElement())
+        {
+            if (_xmlReader.LocalName == OuterBoundaryIs_Element_Name)
+            {
+                outerBoundary = ReadLinearRing(OuterBoundaryIs_Element_Name);
+            }
+            else if (_xmlReader.LocalName == InnerBoundaryIs_Element_Name)
+            {
+                innerBoundary = ReadLinearRing(InnerBoundaryIs_Element_Name);
+            }
+            else
+            {
+                _xmlReader.Skip();
+            }
+        }
+        _xmlReader.ReadEndElement(); // Polygon
+        return new KmlPolygon(outerBoundary!, [innerBoundary!]);
     }
 
-    private KmlGeometry? ReadLineStringGeometry()
+    private List<(double, double, double)> ReadLinearRing(string elementName)
+    {
+        var points = new List<(double, double, double)>();
+        _xmlReader.ReadStartElement(elementName, KLM_Document_Namespace);
+        // Read LinearRing
+        _xmlReader.ReadStartElement(LinearRing_Element_Name, KLM_Document_Namespace);
+        while (_xmlReader.IsStartElement())
+        {
+            if (_xmlReader.LocalName == Coordinates_Element_Name)
+            {
+                string coordText = _xmlReader.ReadElementContentAsString();
+                var coords = coordText.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                foreach (var coord in coords)
+                {
+                    var latLng = coord.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    if (latLng.Length >= 2 &&
+                        double.TryParse(latLng[1], out double latitude) &&
+                        double.TryParse(latLng[0], out double longitude))
+                    {
+                        double altitude = 0;
+                        if (latLng.Length >= 3)
+                        {
+                            _ = double.TryParse(latLng[2], out altitude);
+                        }
+                        points.Add((latitude, longitude, altitude));
+                    }
+                }
+            }
+        }
+        _xmlReader.ReadEndElement(); // LinearRing
+        return points;
+    }
+
+    private KmlLineString? ReadLineStringGeometry()
     {
         KmlLineString? lineString = null;
+        _xmlReader.ReadStartElement(LineString_Element_Name, KLM_Document_Namespace);
+        while (_xmlReader.IsStartElement())
+        {
+            if (_xmlReader.LocalName == Coordinates_Element_Name)
+            {
+                string coordText = _xmlReader.ReadElementContentAsString();
+                var coords = coordText.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                var points = new List<(double, double, double)>();
+                foreach (var coord in coords)
+                {
+                    var latLng = coord.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    if (latLng.Length >= 2 &&
+                        double.TryParse(latLng[1], out double latitude) &&
+                        double.TryParse(latLng[0], out double longitude))
+                    {
+                        double altitude = 0;
+                        if (latLng.Length >= 3)
+                        {
+                            _ = double.TryParse(latLng[2], out altitude);
+                        }
+                        points.Add((latitude, longitude, altitude));
+                    }
+                }
+                lineString = new KmlLineString(points);
+            }
+            else
+            {
+                _xmlReader.Skip();
+            }
+        }
+        _xmlReader.ReadEndElement(); // LineString
         return lineString;
     }
 
@@ -267,9 +353,9 @@ public class KmlReader : IDisposable
     /// <remarks>
     /// You must have created this <see cref="KmlReader"/> instance with async support enabled.
     /// </remarks>
-    public async IAsyncEnumerable<KmlPlacemark> ReadPlacemarksAsync([EnumeratorCancellation] CancellationToken cancellation = default)
+    public async IAsyncEnumerable<KmlPlacemark> ReadPlacemarksAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        while (await _xmlReader.ReadAsync().ConfigureAwait(false))
+        while (await _xmlReader.ReadAsync().ConfigureAwait(false) && !cancellationToken.IsCancellationRequested)
         {
             if (_xmlReader.IsStartElement(Placemark_Element_Name, KLM_Document_Namespace))
             {

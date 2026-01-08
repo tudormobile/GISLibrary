@@ -58,7 +58,11 @@ public class KmzDocument
     /// <returns>A task that represents the asynchronous save operation.</returns>
     public async Task SaveAsync(string path, CancellationToken cancellationToken = default)
     {
-        using var zipArchive = await ZipFile.OpenAsync(path, ZipArchiveMode.Create).ConfigureAwait(false);
+        using var zipArchive = await ZipFile.OpenAsync(path, ZipArchiveMode.Update).ConfigureAwait(false);
+        zipArchive.Entries
+            .Where(e => e.FullName.EndsWith(".kml"))
+            .ToList()
+            .ForEach(e => e.Delete());
         var entry = zipArchive.CreateEntry("doc.kml");
         using var entryStream = entry.Open();
         await Document.WriteToAsync(entryStream, cancellationToken).ConfigureAwait(false);

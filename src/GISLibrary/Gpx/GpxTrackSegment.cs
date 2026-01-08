@@ -14,6 +14,6 @@ public partial class GpxDocument
         /// <summary>
         /// Gets the list of track points in the track segment.
         /// </summary>
-        public List<GpxWaypoint> TrackPoints => [.. _element.Elements(_element.GetDefaultNamespace() + "trkpt").Select(x => new GpxWaypoint(x))];
+        public List<GpxWaypoint> TrackPoints => [.. _element.Elements(_element.Name.Namespace + "trkpt").Select(x => new GpxWaypoint(x))];
     }
 }
