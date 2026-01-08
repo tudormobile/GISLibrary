@@ -1,6 +1,4 @@
-﻿using Tudormobile.GeoJSON;
-
-namespace Tudormobile.GIS.GeoJSON;
+﻿namespace Tudormobile.GeoJSON;
 
 /// <summary>
 /// Provides extension methods for working with GeoJSON data types.

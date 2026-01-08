@@ -25,10 +25,9 @@ public class GeoJSONFileTests
     }
 
     [TestMethod]
-    [DeploymentItem("NYS_Congressional_Districts.geojson")]
     public async Task GeoJSONFile_WithSampleFile_ReadDocumentSucceeds()
     {
-        var path = "NYS_Congressional_Districts.geojson";
+        var path = "TestData/NYS_Congressional_Districts.geojson";
         var file = new GeoJSONFile(path);
         Assert.IsTrue(File.Exists(path));
         Assert.IsTrue(file.Exists());
@@ -44,10 +43,9 @@ public class GeoJSONFileTests
     }
 
     [TestMethod]
-    [DeploymentItem("test.geojson")]
     public void GeoJSONFile_WithSampleFile_HasProperties()
     {
-        var path = "test.geojson";
+        var path = "TestData/test.geojson";
         var file = new GeoJSONFile(path);
         Assert.IsTrue(file.Exists());
         Assert.IsGreaterThan(0, file.GetFileSize());

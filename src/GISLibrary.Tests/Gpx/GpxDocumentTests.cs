@@ -76,6 +76,19 @@ public class GpxDocumentTests
         Assert.IsNotNull(gpx);
         Assert.AreEqual("1.0", gpx.Version);
         Assert.IsFalse(gpx.IsVersion11);
+
+        Assert.AreEqual(string.Empty, gpx.Name);
+        Assert.AreEqual(string.Empty, gpx.Description);
+        Assert.AreEqual(string.Empty, gpx.Author);
+        Assert.AreEqual(string.Empty, gpx.Email);
+        Assert.AreEqual(string.Empty, gpx.Url);
+        Assert.AreEqual(string.Empty, gpx.UrlName);
+        Assert.AreEqual(DateTime.MinValue, gpx.Time);
+        Assert.AreEqual(string.Empty, gpx.Keywords);
+        Assert.AreEqual(0, gpx.Bounds.MinLon);
+        Assert.AreEqual(0, gpx.Bounds.MinLat);
+        Assert.AreEqual(0, gpx.Bounds.MaxLon);
+        Assert.AreEqual(0, gpx.Bounds.MaxLat);
     }
 
     [TestMethod]
@@ -93,6 +106,18 @@ public class GpxDocumentTests
         Assert.IsNotNull(gpx);
         Assert.AreEqual("1.1", gpx.Version);
         Assert.IsTrue(gpx.IsVersion11);
+        Assert.AreEqual(string.Empty, gpx.Name);
+        Assert.AreEqual(string.Empty, gpx.Description);
+        Assert.AreEqual(string.Empty, gpx.Author);
+        Assert.AreEqual(string.Empty, gpx.Email);
+        Assert.AreEqual(string.Empty, gpx.Url);
+        Assert.AreEqual(string.Empty, gpx.UrlName);
+        Assert.AreEqual(DateTime.MinValue, gpx.Time);
+        Assert.AreEqual(string.Empty, gpx.Keywords);
+        Assert.AreEqual(0, gpx.Bounds.MinLon);
+        Assert.AreEqual(0, gpx.Bounds.MinLat);
+        Assert.AreEqual(0, gpx.Bounds.MaxLon);
+        Assert.AreEqual(0, gpx.Bounds.MaxLat);
     }
 
     [TestMethod]
@@ -165,6 +190,7 @@ public class GpxDocumentTests
 
         // Assert
         Assert.AreEqual("Test description", description);
+        Assert.AreEqual("Test description", gpx.Description);
     }
 
     [TestMethod]
@@ -256,6 +282,7 @@ public class GpxDocumentTests
 
         // Assert
         Assert.AreEqual(expectedTime, time.ToUniversalTime());
+        Assert.AreEqual(expectedTime, gpx.Time.ToUniversalTime());
     }
 
     [TestMethod]
@@ -528,7 +555,7 @@ public class GpxDocumentTests
             // Assert
             Assert.IsTrue(File.Exists(tempFile));
             var loadedDoc = XDocument.Load(tempFile);
-            Assert.AreEqual("gpx", loadedDoc.Root?.Name.LocalName);
+            Assert.AreEqual("gpx", loadedDoc.Root!.Name.LocalName);
         }
         finally
         {
@@ -559,7 +586,7 @@ public class GpxDocumentTests
         Assert.IsGreaterThan(0, stream.Length);
         stream.Position = 0;
         var loadedDoc = XDocument.Load(stream);
-        Assert.AreEqual("gpx", loadedDoc.Root?.Name.LocalName);
+        Assert.AreEqual("gpx", loadedDoc.Root!.Name.LocalName);
     }
 
     [TestMethod]
@@ -582,7 +609,7 @@ public class GpxDocumentTests
         Assert.IsGreaterThan(0, stream.Length);
         stream.Position = 0;
         var loadedDoc = XDocument.Load(stream);
-        Assert.AreEqual("gpx", loadedDoc.Root?.Name.LocalName);
+        Assert.AreEqual("gpx", loadedDoc.Root!.Name.LocalName);
     }
 
     public TestContext TestContext { get; set; }

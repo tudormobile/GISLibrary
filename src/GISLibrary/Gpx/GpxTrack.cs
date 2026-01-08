@@ -14,11 +14,11 @@ public partial class GpxDocument
         /// <summary>
         /// Gets the track number.
         /// </summary>
-        public long Number => long.Parse(_element.Element(_element.GetDefaultNamespace() + "number")?.Value ?? "0");
+        public long Number => long.Parse(_element.Element(_element.Name.Namespace + "number")?.Value ?? "0");
 
         /// <summary>
         /// Gets the list of track segments in the track.
         /// </summary>
-        public List<GpxTrackSegment> TrackSegments => [.. _element.Elements(_element.GetDefaultNamespace() + "trkseg").Select(x => new GpxTrackSegment(x))];
+        public List<GpxTrackSegment> TrackSegments => [.. _element.Elements(_element.Name.Namespace + "trkseg").Select(x => new GpxTrackSegment(x))];
     }
 }

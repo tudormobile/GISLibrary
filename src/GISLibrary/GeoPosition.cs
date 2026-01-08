@@ -26,25 +26,25 @@ public readonly struct GeoPosition(double latitude, double longitude, double alt
     public double Altitude => altitude;
 
     /// <summary>
-    /// Determines whether the current instance is equal to the specified GeoLatLonAlt value.
+    /// Determines whether the current instance is equal to the specified position value.
     /// </summary>
-    /// <param name="other">The GeoLatLonAlt value to compare with the current instance.</param>
+    /// <param name="other">The position value to compare with the current instance.</param>
     /// <returns>true if the current instance and the specified value have the same latitude, longitude, and altitude; otherwise,
     /// false.</returns>
     public bool Equals(GeoPosition other)
     {
-        return Latitude == other.Latitude &&
-               Longitude == other.Longitude &&
-               Altitude == other.Altitude;
+        return Math.Abs(Latitude - other.Latitude) < double.Epsilon &&
+               Math.Abs(Longitude - other.Longitude) < double.Epsilon &&
+               Math.Abs(Altitude - other.Altitude) < double.Epsilon;
     }
 
     /// <summary>
-    /// Determines whether the specified object is equal to the current GeoLatLonAlt instance.
+    /// Determines whether the specified object is equal to the current position instance.
     /// </summary>
-    /// <remarks>This method supports value equality comparison for GeoLatLonAlt instances. It returns <see
-    /// langword="false"/> if the specified object is not a GeoLatLonAlt.</remarks>
-    /// <param name="obj">The object to compare with the current GeoLatLonAlt instance.</param>
-    /// <returns><see langword="true"/> if the specified object is a GeoLatLonAlt and is equal to the current instance;
+    /// <remarks>This method supports value equality comparison for position instances. It returns <see
+    /// langword="false"/> if the specified object is not a position.</remarks>
+    /// <param name="obj">The object to compare with the current position instance.</param>
+    /// <returns><see langword="true"/> if the specified object is a position and is equal to the current instance;
     /// otherwise, <see langword="false"/>.</returns>
     public override bool Equals(object? obj) => obj is GeoPosition other && Equals(other);
 
@@ -59,19 +59,19 @@ public readonly struct GeoPosition(double latitude, double longitude, double alt
     public override int GetHashCode() => HashCode.Combine(Latitude, Longitude, Altitude);
 
     /// <summary>
-    /// Determines whether two GeoLatLonAlt instances are equal.
+    /// Determines whether two position instances are equal.
     /// </summary>
-    /// <param name="left">The first GeoLatLonAlt instance to compare.</param>
-    /// <param name="right">The second GeoLatLonAlt instance to compare.</param>
-    /// <returns>true if the specified GeoLatLonAlt instances are equal; otherwise, false.</returns>
+    /// <param name="left">The first position instance to compare.</param>
+    /// <param name="right">The second position instance to compare.</param>
+    /// <returns>true if the specified position instances are equal; otherwise, false.</returns>
     public static bool operator ==(GeoPosition left, GeoPosition right) => left.Equals(right);
 
     /// <summary>
-    /// Determines whether two GeoLatLonAlt instances are not equal.
+    /// Determines whether two position instances are not equal.
     /// </summary>
     /// <remarks>This operator returns the opposite result of the equality operator (==).</remarks>
-    /// <param name="left">The first GeoLatLonAlt instance to compare.</param>
-    /// <param name="right">The second GeoLatLonAlt instance to compare.</param>
+    /// <param name="left">The first position instance to compare.</param>
+    /// <param name="right">The second position instance to compare.</param>
     /// <returns>true if the specified instances are not equal; otherwise, false.</returns>
     public static bool operator !=(GeoPosition left, GeoPosition right) => !left.Equals(right);
 

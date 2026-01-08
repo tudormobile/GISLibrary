@@ -24,7 +24,7 @@ public partial class GpxDocument
         /// <summary>
         /// Gets the elevation of the waypoint in meters.
         /// </summary>
-        public double Elevation => double.Parse(_element.Element(_element.GetDefaultNamespace() + "ele")?.Value ?? "0");
+        public double Elevation => double.Parse(_element.Element(_element.Name.Namespace + "ele")?.Value ?? "0");
 
         /// <summary>
         /// Gets the timestamp of when the waypoint was recorded.
@@ -33,7 +33,7 @@ public partial class GpxDocument
         {
             get
             {
-                var timeString = _element.Element(_element.GetDefaultNamespace() + "time")?.Value;
+                var timeString = _element.Element(_element.Name.Namespace + "time")?.Value;
                 if (timeString != null && DateTime.TryParse(timeString, out DateTime result))
                 {
                     return result;

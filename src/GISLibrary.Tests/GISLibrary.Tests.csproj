@@ -1,34 +1,26 @@
-﻿<Project Sdk="MSTest.Sdk/4.0.1">
-
+﻿<Project Sdk="MSTest.Sdk/4.0.2">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.Testing.Extensions.TrxReport" Version="2.0.2" />
-    <PackageReference Update="MSTest.TestAdapter" Version="4.0.2" />
-    <PackageReference Update="MSTest.TestFramework" Version="4.0.2" />
+    <!-- Copy test data files to output directory -->
+    <Content Include="TestData\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\GISLibrary\GISLibrary.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <None Update="NYS_Congressional_Districts.geojson">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="nys_counties.geojson">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="test.geojson">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Compile Update="MSTestSettings.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
-
 </Project>

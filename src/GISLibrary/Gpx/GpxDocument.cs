@@ -30,11 +30,12 @@ public partial class GpxDocument : GpxDocumentBase
     /// <exception cref="NotSupportedException">Thrown when the GPX version is not 1.0 or 1.1.</exception>
     public GpxDocument(XDocument document) : base(document, "gpx")
     {
-        if (_root.Attribute("version") == null)
+        var versionAttribute = _root.Attribute("version");
+        if (versionAttribute == null)
         {
             throw new ArgumentException("The provided GPX document does not have a version attribute.");
         }
-        _version = (_root.Attribute("version")?.Value) ?? throw new ArgumentException("The provided GPX document does not have a version attribute value.");
+        _version = versionAttribute.Value;
         if (_version != "1.0" && _version != "1.1")
         {
             throw new NotSupportedException($"GPX version {_version} is not supported. Only versions 1.0 and 1.1 are supported.");

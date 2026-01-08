@@ -90,6 +90,23 @@ public class GpxWaypointTests
     }
 
     [TestMethod]
+    public void Time_MissingFromElement_ReturnsMinimumTime()
+    {
+        // Arrange
+        var expectedTime = DateTime.MinValue.ToUniversalTime();
+        var element = new XElement("wpt",
+            new XAttribute("lat", "37.8"),
+            new XAttribute("lon", "-122.4"));
+        var waypoint = new GpxDocument.GpxWaypoint(element);
+
+        // Act
+        var time = waypoint.Time;
+
+        // Assert
+        Assert.AreEqual(expectedTime, time.ToUniversalTime());
+    }
+
+    [TestMethod]
     public void Time_WithInvalidElement_ReturnsMinValue()
     {
         // Arrange
