@@ -550,7 +550,7 @@ public class GeoExtensionsTests
         var position = new GeoPosition(0.0, 5.0, 0);
 
         // Act
-        var result = path.IsLocationInPath(position);
+        path.IsLocationInPath(position);
 
         // Assert
         // Boundary behavior is implementation-specific; just verify it doesn't crash
