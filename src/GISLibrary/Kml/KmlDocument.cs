@@ -28,8 +28,6 @@ public class KmlDocument : KmlDocumentItemBase
     /// <value>A list of <see cref="KmlFolder"/> objects.</value>
     public IEnumerable<KmlPlacemark> AllPlacemarks => Placemarks.Concat(Folders.SelectMany(x => x.Placemarks));
 
-    private static readonly char[] separator = [' ', '\n', '\r', '\t'];
-
     /// <summary>
     /// Loads a KML document from a stream synchronously.
     /// </summary>
@@ -136,7 +134,7 @@ public class KmlDocument : KmlDocumentItemBase
     /// <returns>A task that represents the asynchronous write operation.</returns>
     public async Task WriteToAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        using var writer = KmlWriter.Create(stream, allowAsync: true);
+        using var writer = KmlWriter.Create(stream);
         await writer.WriteStartKmlAsync(Id, Name, Description);
         await writer.WriteFoldersAsync(Folders, cancellationToken);
         await writer.WritePlacemarksAsync(Placemarks, cancellationToken);
@@ -197,28 +195,8 @@ public class KmlDocument : KmlDocumentItemBase
         var coordinatesElement = element.Element(ns + KmlReader.Coordinates_Element_Name);
         if (coordinatesElement == null) return new KmlLineString([]);
         var coordsText = coordinatesElement.Value.Trim();
-        var coords = ParseCoordinatesList(coordsText);
+        var coords = KmlReader.ParseCoordinatesList(coordsText);
         return new KmlLineString(coords);
-    }
-
-    private static List<(double Latitude, double Longitude, double Altitude)> ParseCoordinatesList(string coordsText)
-    {
-        var coords = new List<(double Latitude, double Longitude, double Altitude)>();
-        var coordPairs = coordsText.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var coordPair in coordPairs)
-        {
-            var coordsParts = coordPair.Split(',');
-            if (coordsParts.Length < 2) continue;
-            _ = double.TryParse(coordsParts[0], out double longitude);
-            _ = double.TryParse(coordsParts[1], out double latitude);
-            double altitude = 0;
-            if (coordsParts.Length >= 3)
-            {
-                _ = double.TryParse(coordsParts[2], out altitude);
-            }
-            coords.Add((latitude, longitude, altitude));
-        }
-        return coords;
     }
 
     private static KmlPolygon CreatePolygonGeometry(XElement element, XNamespace ns)
@@ -230,7 +208,7 @@ public class KmlDocument : KmlDocumentItemBase
         var coordinatesElement = linearRingElement.Element(ns + KmlReader.Coordinates_Element_Name);
         if (coordinatesElement == null) return new KmlPolygon([], []);
         var coordsText = coordinatesElement.Value.Trim();
-        var outerCoords = ParseCoordinatesList(coordsText);
+        var outerCoords = KmlReader.ParseCoordinatesList(coordsText);
         return new KmlPolygon(outerCoords, []);
     }
 
@@ -239,15 +217,6 @@ public class KmlDocument : KmlDocumentItemBase
         var coordinatesElement = pointElement.Element(ns + KmlReader.Coordinates_Element_Name);
         if (coordinatesElement == null) return new KmlPoint(0, 0, 0);
         var coordsText = coordinatesElement.Value.Trim();
-        var coordsParts = coordsText.Split(',');
-        if (coordsParts.Length < 2) return new KmlPoint(0, 0, 0);
-        if (!double.TryParse(coordsParts[0], out double longitude)) longitude = 0;
-        if (!double.TryParse(coordsParts[1], out double latitude)) latitude = 0;
-        double altitude = 0;
-        if (coordsParts.Length >= 3)
-        {
-            _ = double.TryParse(coordsParts[2], out altitude);
-        }
-        return new KmlPoint(latitude, longitude, altitude);
+        return KmlReader.ParseCoordinates(coordsText);
     }
 }

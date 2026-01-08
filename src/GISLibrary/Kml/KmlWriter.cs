@@ -29,12 +29,11 @@ public class KmlWriter : IDisposable
     /// Creates a new instance of <see cref="KmlWriter"/> that writes to the specified stream.
     /// </summary>
     /// <param name="stream">The stream to write the KML document to.</param>
-    /// <param name="allowAsync">A value indicating whether asynchronous write operations are enabled.</param>
     /// <returns>A new <see cref="KmlWriter"/> instance.</returns>
-    public static KmlWriter Create(Stream stream, bool allowAsync = false) => new(XmlWriter.Create(stream, new XmlWriterSettings()
+    public static KmlWriter Create(Stream stream) => new(XmlWriter.Create(stream, new XmlWriterSettings()
     {
         Indent = true,
-        Async = allowAsync
+        Async = true,
     }));
 
     /// <summary>
@@ -44,7 +43,12 @@ public class KmlWriter : IDisposable
     /// <param name="name">The name of the KML document.</param>
     /// <param name="description">The description of the KML document.</param>
     /// <returns>A task that represents the asynchronous write operation.</returns>
-    public async Task WriteStartKmlAsync(string id, string name, string description)
+    /// <remarks>
+    /// If any of (id | name | description) are provided, a document element is created in addition to the root tag
+    /// containing these values. In this case, the WriteEndKmlAsync() method will also close the document element 
+    /// along with the kml root.
+    /// </remarks>
+    public async Task WriteStartKmlAsync(string? id = null, string? name = null, string? description = null)
     {
         _hasDocumentContainer = !string.IsNullOrWhiteSpace(string.Concat(id, name, description));
         await _xmlWriter.WriteStartDocumentAsync().ConfigureAwait(false);
@@ -52,7 +56,7 @@ public class KmlWriter : IDisposable
         if (_hasDocumentContainer)
         {
             await _xmlWriter.WriteStartElementAsync(null, KmlReader.Document_Element_Name, null).ConfigureAwait(false);
-            await WriteIdNameDescriptionAsync(id, name, description).ConfigureAwait(false);
+            await WriteIdNameDescriptionAsync(id ?? "", name ?? "", description ?? "").ConfigureAwait(false);
         }
     }
 
@@ -92,6 +96,9 @@ public class KmlWriter : IDisposable
     /// Asynchronously writes the end of a KML document and flushes the writer.
     /// </summary>
     /// <returns>A task that represents the asynchronous write operation.</returns>
+    /// <remarks>
+    /// This method also flushes the output stream to finish off the document.
+    /// </remarks>
     public async Task WriteEndKmlAsync()
     {
         if (_hasDocumentContainer)
@@ -104,12 +111,24 @@ public class KmlWriter : IDisposable
     }
 
     /// <summary>
+    /// Asynchronously flushes any buffered data to the underlying storage or stream.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous flush operation.</returns>
+    /// <remarks>Explicitly flush the output stream.
+    /// <para>
+    /// </para>
+    /// Calling this method is not normally required. This method is automatically called when using
+    /// the WriteEndKmlAsync() method to finish off the document.
+    /// </remarks>
+    public async Task FlushAsync() => await _xmlWriter.FlushAsync().ConfigureAwait(false);
+
+    /// <summary>
     /// Asynchronously writes a collection of KML folders to the document.
     /// </summary>
     /// <param name="folders">The collection of folders to write.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous write operation.</returns>
-    public async Task WriteFoldersAsync(IList<KmlFolder> folders, CancellationToken cancellationToken)
+    public async Task WriteFoldersAsync(IList<KmlFolder> folders, CancellationToken cancellationToken = default)
     {
         foreach (var folder in folders)
         {

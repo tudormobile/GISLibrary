@@ -41,6 +41,7 @@ public class KmzDocumentTests
         var exception = Assert.ThrowsExactly<FileNotFoundException>(() => KmzDocument.Load(kmzFilePath));
         Assert.AreEqual("No KML file found in the KMZ archive.", exception.Message);
     }
+
     [TestMethod]
     public void Save_ThenLoad_ShouldPreserveKmlDocument()
     {
@@ -64,6 +65,43 @@ public class KmzDocumentTests
             Assert.AreEqual(kmlDoc.Description, loadedKmlDoc.Description);
             Assert.AreEqual(kmlDoc.Id, loadedKmlDoc.Id);
             Assert.AreEqual("test name", loadedKmlDoc.Name);
+            Assert.AreEqual("test description", loadedKmlDoc.Description);
+            Assert.AreEqual("1", loadedKmlDoc.Id);
+        }
+        finally
+        {
+            // Cleanup
+            File.Delete(tempKmzFilePath);
+        }
+    }
+
+    [TestMethod]
+    public void Save_SaveAgain_ThenLoad_ShouldLoadModifiedKmlDocument()
+    {
+        // Arrange
+        var content = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<kml xmlns=""http://www.opengis.net/kml/2.2""><Document id=""1""><name>test name</name><description>test description</description></Document></kml>";
+        var tempKmzFilePath = Path.GetTempFileName();
+        // Act
+        try
+        {
+            var kmlDoc = KmlDocument.Parse(content);
+            var kmzDocument = new KmzDocument(tempKmzFilePath, kmlDoc);
+            kmzDocument.Save(tempKmzFilePath);
+            // save a second time, overriding and overwriting the first document in the archive
+            kmlDoc = KmlDocument.Parse(content.Replace("test name", "modified name"));
+            kmzDocument = new KmzDocument(tempKmzFilePath, kmlDoc);
+            kmzDocument.Save(tempKmzFilePath);
+            // Assert
+            var loadedKmzDocument = KmzDocument.Load(tempKmzFilePath);
+            var loadedKmlDoc = loadedKmzDocument.Document;
+
+            Assert.HasCount(kmlDoc.Folders.Count, loadedKmlDoc.Folders);
+            Assert.HasCount(kmlDoc.Placemarks.Count, loadedKmlDoc.Placemarks);
+            Assert.AreEqual(kmlDoc.Name, loadedKmlDoc.Name);
+            Assert.AreEqual(kmlDoc.Description, loadedKmlDoc.Description);
+            Assert.AreEqual(kmlDoc.Id, loadedKmlDoc.Id);
+            Assert.AreEqual("modified name", loadedKmlDoc.Name);
             Assert.AreEqual("test description", loadedKmlDoc.Description);
             Assert.AreEqual("1", loadedKmlDoc.Id);
         }
