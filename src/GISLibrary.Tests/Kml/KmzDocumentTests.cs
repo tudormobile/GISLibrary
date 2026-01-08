@@ -14,7 +14,7 @@ public class KmzDocumentTests
         var kmzDocument = KmzDocument.Load(kmzFilePath);
         // Assert
         Assert.IsNotNull(kmzDocument);
-        Assert.IsInstanceOfType(kmzDocument, typeof(KmzDocument));
+        Assert.IsInstanceOfType<KmzDocument>(kmzDocument);
         Assert.IsEmpty(kmzDocument.Document.Folders);
         Assert.AreEqual("example.kmz", kmzDocument.Document.Name);
 
@@ -23,7 +23,7 @@ public class KmzDocumentTests
         Assert.AreEqual("KMZ Test File", placemark.Name);
         Assert.Contains("Feel free to use and share the file according to the license above.", placemark.Description);
         Assert.IsNotNull(placemark.Geometry);
-        Assert.IsInstanceOfType(placemark.Geometry, typeof(KmlPoint));
+        Assert.IsInstanceOfType<KmlPoint>(placemark.Geometry);
         Assert.AreEqual(KmlGeometryType.Point, placemark.Geometry.GeometryType);
 
         var point = (KmlPoint)placemark.Geometry;
@@ -53,7 +53,7 @@ public class KmzDocumentTests
         try
         {
             var kmlDoc = KmlDocument.Parse(content);
-            var kmzDocument = new KmzDocument(tempKmzFilePath, kmlDoc);
+            var kmzDocument = new KmzDocument(kmlDoc);
             kmzDocument.Save(tempKmzFilePath);
             // Assert
             var loadedKmzDocument = KmzDocument.Load(tempKmzFilePath);
@@ -86,11 +86,11 @@ public class KmzDocumentTests
         try
         {
             var kmlDoc = KmlDocument.Parse(content);
-            var kmzDocument = new KmzDocument(tempKmzFilePath, kmlDoc);
+            var kmzDocument = new KmzDocument(kmlDoc);
             kmzDocument.Save(tempKmzFilePath);
             // save a second time, overriding and overwriting the first document in the archive
             kmlDoc = KmlDocument.Parse(content.Replace("test name", "modified name"));
-            kmzDocument = new KmzDocument(tempKmzFilePath, kmlDoc);
+            kmzDocument = new KmzDocument(kmlDoc);
             kmzDocument.Save(tempKmzFilePath);
             // Assert
             var loadedKmzDocument = KmzDocument.Load(tempKmzFilePath);

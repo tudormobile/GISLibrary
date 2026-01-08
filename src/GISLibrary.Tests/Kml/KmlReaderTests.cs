@@ -36,6 +36,7 @@ public class KmlReaderTests
         var success = reader.MoveToDocument();
         var documentItem = reader.ReadDocumentStart();
         // Assert
+        Assert.IsTrue(success);
         Assert.AreEqual(KmlReadState.Document, reader.ReadState);
         Assert.IsNotNull(documentItem);
         Assert.AreEqual("documentId", documentItem.Id);
@@ -59,6 +60,7 @@ public class KmlReaderTests
         var success = reader.MoveToDocument();
         var documentItem = reader.ReadDocumentStart();
         // Assert
+        Assert.IsTrue(success);
         Assert.AreEqual(KmlReadState.Document, reader.ReadState);
         Assert.IsNotNull(documentItem);
         Assert.AreEqual(string.Empty, documentItem.Id);
@@ -88,6 +90,7 @@ public class KmlReaderTests
         var isSuccess = reader.IsFolder();
         var folderItem = reader.ReadFolderStart();
         // Assert
+        Assert.IsTrue(isSuccess);
         Assert.AreEqual(KmlReadState.Folder, reader.ReadState);
         Assert.IsNotNull(folderItem);
         Assert.IsTrue(isSuccess);
@@ -114,9 +117,9 @@ public class KmlReaderTests
         var isSuccess = reader.IsFolder();
         var folderItem = reader.ReadFolderStart();
         // Assert
+        Assert.IsTrue(isSuccess);
         Assert.AreEqual(KmlReadState.Folder, reader.ReadState);
         Assert.IsNotNull(folderItem);
-        Assert.IsTrue(isSuccess);
         Assert.AreEqual(string.Empty, folderItem.Id);
         Assert.AreEqual(string.Empty, folderItem.Name);
         Assert.AreEqual(string.Empty, folderItem.Description);
@@ -391,7 +394,7 @@ public class KmlReaderTests
         // Act & Assert
         var exception = await Assert.ThrowsExactlyAsync<InvalidOperationException>(async () =>
         {
-            var placemarks = await reader.ReadPlacemarksAsync(TestContext.CancellationToken).ToArrayAsync(TestContext.CancellationToken);
+            _ = await reader.ReadPlacemarksAsync(TestContext.CancellationToken).ToArrayAsync(TestContext.CancellationToken);
         });
         Assert.AreEqual("Placemark geometry could not be read.", exception.Message);
     }

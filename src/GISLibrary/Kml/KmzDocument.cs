@@ -16,9 +16,8 @@ public class KmzDocument
     /// <summary>
     /// Initializes a new instance of the <see cref="KmzDocument"/> class.
     /// </summary>
-    /// <param name="path">The file path of the KMZ document.</param>
     /// <param name="document">The KML document contained within the KMZ archive.</param>
-    public KmzDocument(string path, KmlDocument document) { Document = document; }
+    public KmzDocument(KmlDocument document) { Document = document; }
 
     /// <summary>
     /// Loads a KMZ document from the specified file path synchronously.
@@ -47,7 +46,7 @@ public class KmzDocument
             ?? throw new FileNotFoundException("No KML file found in the KMZ archive.");
         using var entryStream = entry.Open();
         return await KmlDocument.LoadAsync(entryStream, cancellationToken)
-            .ContinueWith(t => new KmzDocument(path, t.Result), cancellationToken);
+            .ContinueWith(t => new KmzDocument(t.Result), cancellationToken);
     }
 
     /// <summary>
@@ -58,7 +57,7 @@ public class KmzDocument
     /// <returns>A task that represents the asynchronous save operation.</returns>
     public async Task SaveAsync(string path, CancellationToken cancellationToken = default)
     {
-        using var zipArchive = await ZipFile.OpenAsync(path, ZipArchiveMode.Update).ConfigureAwait(false);
+        using var zipArchive = await ZipFile.OpenAsync(path, ZipArchiveMode.Update, cancellationToken).ConfigureAwait(false);
         zipArchive.Entries
             .Where(e => e.FullName.EndsWith(".kml"))
             .ToList()

@@ -16,7 +16,7 @@ namespace Tudormobile.Kml;
 /// </remarks>
 public class KmlReader : IDisposable
 {
-    internal const string KLM_Document_Namespace = "http://www.opengis.net/kml/2.2";
+    internal const string KML_Document_Namespace = "http://www.opengis.net/kml/2.2";
     internal const string Root_Element_Name = "kml";
     internal const string Document_Element_Name = "Document";
     internal const string Folder_Element_Name = "Folder";
@@ -68,7 +68,7 @@ public class KmlReader : IDisposable
     {
         // Read the id attribute BEFORE consuming the start element
         string id = _xmlReader.GetAttribute(Id_Attribute_Name) ?? string.Empty;
-        _xmlReader.ReadStartElement(Document_Element_Name, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(Document_Element_Name, KML_Document_Namespace);
         string name = string.Empty;
         string description = string.Empty;
         while (_xmlReader.IsStartElement())
@@ -98,7 +98,7 @@ public class KmlReader : IDisposable
     {
         // Read the id attribute BEFORE consuming the start element
         string id = _xmlReader.GetAttribute(Id_Attribute_Name) ?? string.Empty;
-        _xmlReader.ReadStartElement(Folder_Element_Name, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(Folder_Element_Name, KML_Document_Namespace);
         string name = string.Empty;
         string description = string.Empty;
         while (_xmlReader.IsStartElement())
@@ -128,7 +128,7 @@ public class KmlReader : IDisposable
     {
         // Read the id attribute BEFORE consuming the start element
         string id = _xmlReader.GetAttribute(Id_Attribute_Name) ?? string.Empty;
-        _xmlReader.ReadStartElement(Placemark_Element_Name, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(Placemark_Element_Name, KML_Document_Namespace);
         string name = string.Empty;
         string description = string.Empty;
         KmlGeometry? geometry = null;
@@ -168,20 +168,20 @@ public class KmlReader : IDisposable
     /// Determines whether the current position is at the start of a folder element.
     /// /// </summary>
     /// <returns><see langword="true"/> if the reader is positioned at a folder element; otherwise, <see langword="false"/>.</returns>
-    public bool IsFolder() => _xmlReader.IsStartElement(Folder_Element_Name, KLM_Document_Namespace);
+    public bool IsFolder() => _xmlReader.IsStartElement(Folder_Element_Name, KML_Document_Namespace);
 
     /// <summary>
     /// Determines whether the current element is a Document element in the KLM document namespace.
     /// </summary>
     /// <returns><see langword="true"/> if the current element is a Document element in the expected namespace; otherwise, <see
     /// langword="false"/>.</returns>
-    public bool IsDocument() => _xmlReader.IsStartElement(Document_Element_Name, KLM_Document_Namespace);
+    public bool IsDocument() => _xmlReader.IsStartElement(Document_Element_Name, KML_Document_Namespace);
 
     /// <summary>
     /// Determines whether the current position is at the start of a placemark element.
     /// </summary>
     /// <returns><see langword="true"/> if the reader is positioned at a placemark element; otherwise, <see langword="false"/>.</returns>
-    public bool IsPlacemark() => _xmlReader.IsStartElement(Placemark_Element_Name, KLM_Document_Namespace);
+    public bool IsPlacemark() => _xmlReader.IsStartElement(Placemark_Element_Name, KML_Document_Namespace);
 
     /// <summary>
     /// Moves the reader to the next placemark element in the document.
@@ -189,7 +189,7 @@ public class KmlReader : IDisposable
     /// <returns><see langword="true"/> if a placemark was found; otherwise, <see langword="false"/>.</returns>
     public bool MoveToPlacemark()
     {
-        bool result = _xmlReader.ReadToFollowing(Placemark_Element_Name, KLM_Document_Namespace);
+        bool result = _xmlReader.ReadToFollowing(Placemark_Element_Name, KML_Document_Namespace);
         ReadState = result ? KmlReadState.Placemark : KmlReadState.EndOfFile;
         return result;
     }
@@ -200,7 +200,7 @@ public class KmlReader : IDisposable
     /// <returns><see langword="true"/> if a folder was found; otherwise, <see langword="false"/>.</returns>
     public bool MoveToFolder()
     {
-        bool result = _xmlReader.ReadToFollowing(Folder_Element_Name, KLM_Document_Namespace);
+        bool result = _xmlReader.ReadToFollowing(Folder_Element_Name, KML_Document_Namespace);
         ReadState = result ? KmlReadState.Folder : KmlReadState.EndOfFile;
         return result;
     }
@@ -211,7 +211,7 @@ public class KmlReader : IDisposable
     /// <returns>true if the position was successfully moved to the next document; otherwise, false.</returns>
     public bool MoveToDocument()
     {
-        bool result = _xmlReader.ReadToFollowing(Document_Element_Name, KLM_Document_Namespace);
+        bool result = _xmlReader.ReadToFollowing(Document_Element_Name, KML_Document_Namespace);
         ReadState = result ? KmlReadState.Document : KmlReadState.EndOfFile;
         return result;
     }
@@ -233,7 +233,7 @@ public class KmlReader : IDisposable
     {
         while (await _xmlReader.ReadAsync().ConfigureAwait(false) && !cancellationToken.IsCancellationRequested)
         {
-            if (_xmlReader.IsStartElement(Placemark_Element_Name, KLM_Document_Namespace))
+            if (_xmlReader.IsStartElement(Placemark_Element_Name, KML_Document_Namespace))
             {
                 var placemarkItem = ReadPlacemark();
                 yield return new KmlPlacemark(placemarkItem);
@@ -278,7 +278,7 @@ public class KmlReader : IDisposable
     private KmlPoint? ReadPointGeometry()
     {
         KmlPoint? point = null;
-        _xmlReader.ReadStartElement(Point_Element_Name, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(Point_Element_Name, KML_Document_Namespace);
         while (_xmlReader.IsStartElement())
         {
             if (_xmlReader.LocalName == Coordinates_Element_Name)
@@ -299,7 +299,7 @@ public class KmlReader : IDisposable
     {
         List<(double, double, double)>? outerBoundary = null;
         List<(double, double, double)>? innerBoundary = null;
-        _xmlReader.ReadStartElement(Polygon_Element_Name, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(Polygon_Element_Name, KML_Document_Namespace);
         while (_xmlReader.IsStartElement())
         {
             if (_xmlReader.LocalName == OuterBoundaryIs_Element_Name)
@@ -323,9 +323,9 @@ public class KmlReader : IDisposable
     private List<(double, double, double)> ReadLinearRing(string elementName)
     {
         List<(double, double, double)> points = [];
-        _xmlReader.ReadStartElement(elementName, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(elementName, KML_Document_Namespace);
         // Read LinearRing
-        _xmlReader.ReadStartElement(LinearRing_Element_Name, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(LinearRing_Element_Name, KML_Document_Namespace);
         while (_xmlReader.IsStartElement())
         {
             if (_xmlReader.LocalName == Coordinates_Element_Name)
@@ -341,7 +341,7 @@ public class KmlReader : IDisposable
     private KmlLineString? ReadLineStringGeometry()
     {
         KmlLineString? lineString = null;
-        _xmlReader.ReadStartElement(LineString_Element_Name, KLM_Document_Namespace);
+        _xmlReader.ReadStartElement(LineString_Element_Name, KML_Document_Namespace);
         while (_xmlReader.IsStartElement())
         {
             if (_xmlReader.LocalName == Coordinates_Element_Name)

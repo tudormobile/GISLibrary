@@ -52,7 +52,7 @@ public class KmlWriter : IDisposable
     {
         _hasDocumentContainer = !string.IsNullOrWhiteSpace(string.Concat(id, name, description));
         await _xmlWriter.WriteStartDocumentAsync().ConfigureAwait(false);
-        await _xmlWriter.WriteStartElementAsync(null, KmlReader.Root_Element_Name, KmlReader.KLM_Document_Namespace).ConfigureAwait(false);
+        await _xmlWriter.WriteStartElementAsync(null, KmlReader.Root_Element_Name, KmlReader.KML_Document_Namespace).ConfigureAwait(false);
         if (_hasDocumentContainer)
         {
             await _xmlWriter.WriteStartElementAsync(null, KmlReader.Document_Element_Name, null).ConfigureAwait(false);
