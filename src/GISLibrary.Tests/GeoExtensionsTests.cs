@@ -2,6 +2,7 @@
 using Tudormobile.GeoJSON;
 using Tudormobile.GIS;
 using Tudormobile.Gpx;
+using Tudormobile.Kml;
 using Tudormobile.Tcx;
 
 namespace GISLibrary.Tests;
@@ -12,7 +13,47 @@ namespace GISLibrary.Tests;
 [TestClass]
 public class GeoExtensionsTests
 {
-    #region AsGeoPath Tests - GeoJSONPolygon
+    [TestMethod]
+    public void AsGeoPath_KmlPlacemark_WithLineString_ReturnsGeoPath()
+    {
+        // Arrange
+        var lineString = new KmlLineString([(10, 20, 100), (15, 25, 150)]);
+        var placemark = new KmlPlacemark(new KmlPlacemarkItem("", "", "", lineString));
+        // Act
+        var result = placemark.AsGeoPath();
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual(new GeoPosition(10.0, 20.0, 100.0), result[0]);
+        Assert.AreEqual(new GeoPosition(15.0, 25.0, 150.0), result[1]);
+    }
+
+    [TestMethod]
+    public void AsGeoPath_KmlPlacemark_WithPolygon_ReturnsGeoPath()
+    {
+        // Arrange
+        var polygon = new KmlPolygon([(30, 40, 200), (35, 45, 250)], [[(30, 50, 300), (30, 40, 200)]]);
+        var placemark = new KmlPlacemark(new KmlPlacemarkItem("", "", "", polygon));
+        // Act
+        var result = placemark.AsGeoPath();
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual(new GeoPosition(30.0, 40.0, 200.0), result[0]);
+        Assert.AreEqual(new GeoPosition(35.0, 45.0, 250.0), result[1]);
+    }
+
+    [TestMethod]
+    public void AsGeoPath_KmlPlacemark_WithPoint_ReturnsNull()
+    {
+        // Arrange
+        var point = new KmlPoint(50, 60, 300);
+        var placemark = new KmlPlacemark(new KmlPlacemarkItem("", "", "", point));
+        // Act
+        var result = placemark.AsGeoPath();
+        // Assert
+        Assert.IsNull(result);
+    }
 
     /// <summary>
     /// Tests that AsGeoPath converts a GeoJSON polygon with a single ring to a GeoPath.
@@ -158,10 +199,6 @@ public class GeoExtensionsTests
         Assert.AreEqual(new GeoPosition(3.0, 4.0, 0), result[1]);
     }
 
-    #endregion
-
-    #region AsGeoPath Tests - TcxActivity
-
     /// <summary>
     /// Tests that AsGeoPath converts a TCX activity with trackpoints to a GeoPath.
     /// </summary>
@@ -270,10 +307,6 @@ public class GeoExtensionsTests
         Assert.AreEqual(new GeoPosition(38.0, -122.6, 20.0), result[1]);
     }
 
-    #endregion
-
-    #region AsGeoPath Tests - TCX Trackpoints
-
     /// <summary>
     /// Tests that AsGeoPath converts TCX trackpoints to a GeoPath.
     /// </summary>
@@ -342,9 +375,6 @@ public class GeoExtensionsTests
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
     }
-
-    #endregion
-
 
     /// <summary>
     /// Tests that AsGeoPath converts GPX waypoints to a GeoPath.
