@@ -1,5 +1,6 @@
 ﻿using Tudormobile.GeoJSON;
 using Tudormobile.Gpx;
+using Tudormobile.Kml;
 using Tudormobile.Tcx;
 
 namespace Tudormobile.GIS;
@@ -9,6 +10,21 @@ namespace Tudormobile.GIS;
 /// </summary>
 public static class GeoExtensions
 {
+    /// <summary>
+    /// Converts a KML placemark to a GeoPath by extracting coordinates from its geometry.
+    /// </summary>
+    /// <param name="placemark">The KML placemark to convert. Cannot be null.</param>
+    /// <returns>
+    /// A GeoPath containing the coordinates from the placemark's geometry, or null if the geometry is not a line or polygon.
+    /// </returns>
+    public static GeoPath? AsGeoPath(this KmlPlacemark placemark)
+    => placemark.Geometry switch
+    {
+        KmlLineString lineString => new GeoPath().AddRange(lineString.Coordinates.Select(coord => new GeoPosition(coord.Latitude, coord.Longitude, coord.Altitude))),
+        KmlPolygon polygon => new GeoPath().AddRange(polygon.OuterBoundary.Select(coord => new GeoPosition(coord.Latitude, coord.Longitude, coord.Altitude))),
+        _ => null
+    };
+
     /// <summary>
     /// Converts the first ring of the specified GeoJSON polygon to a GeoPath instance.
     /// </summary>
