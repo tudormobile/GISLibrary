@@ -27,11 +27,11 @@ public enum FitBaseType : byte
     Float32 = 0x88,
     /// <summary>8-byte IEEE-754 floating point value.</summary>
     Float64 = 0x89,
-    /// <summary>1-byte unsigned integer, where 0 represents an invalid/unset value.</summary>
+    /// <summary>1-byte unsigned integer with an "invalid/unset" sentinel (see <see cref="FitBaseTypeExtensions.GetInvalidValue"/>).</summary>
     UInt8z = 0x0A,
-    /// <summary>2-byte unsigned integer, where 0 represents an invalid/unset value.</summary>
+    /// <summary>2-byte unsigned integer with an "invalid/unset" sentinel (see <see cref="FitBaseTypeExtensions.GetInvalidValue"/>).</summary>
     UInt16z = 0x8B,
-    /// <summary>4-byte unsigned integer, where 0 represents an invalid/unset value.</summary>
+    /// <summary>4-byte unsigned integer with an "invalid/unset" sentinel (see <see cref="FitBaseTypeExtensions.GetInvalidValue"/>).</summary>
     UInt32z = 0x8C,
     /// <summary>1-byte raw binary data.</summary>
     Byte = 0x0D,
@@ -39,6 +39,6 @@ public enum FitBaseType : byte
     SInt64 = 0x8E,
     /// <summary>8-byte unsigned integer.</summary>
     UInt64 = 0x8F,
-    /// <summary>8-byte unsigned integer, where 0 represents an invalid/unset value.</summary>
+    /// <summary>8-byte unsigned integer with an "invalid/unset" sentinel (see <see cref="FitBaseTypeExtensions.GetInvalidValue"/>).</summary>
     UInt64z = 0x90,
 }
