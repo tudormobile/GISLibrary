@@ -20,7 +20,7 @@ public class FitFile(string path)
     /// Determines whether the file exists.
     /// </summary>
     /// <returns><c>true</c> if the file exists; otherwise <c>false</c>.</returns>
-    public bool Exists() => File.Exists(path);
+    public bool Exists() => File.Exists(Path);
 
     /// <summary>
     /// Gets the last write time of the file.
