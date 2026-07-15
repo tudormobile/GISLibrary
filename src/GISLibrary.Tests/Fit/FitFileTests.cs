@@ -79,7 +79,7 @@ public class FitFileTests
         Assert.AreEqual(42.84601, actual[0].Position!.Latitude, 0.0001);
         Assert.AreEqual(-73.82947, actual[0].Position!.Longitude, 0.0001);
         Assert.AreEqual(76.6, actual[0].Position!.Altitude!.Value, 0.0001);
-        Assert.AreEqual(new DateTime(2021, 4, 4, 18, 1, 13), actual[0].Timestamp);
+        Assert.AreEqual(new DateTime(2021, 4, 4, 18, 1, 13, DateTimeKind.Utc), actual[0].Timestamp);
 
 
     }
