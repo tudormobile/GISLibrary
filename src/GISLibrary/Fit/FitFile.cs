@@ -26,7 +26,7 @@ public class FitFile(string path)
     /// Gets the last write time of the file.
     /// </summary>
     /// <returns>The <see cref="DateTime"/> the file was last modified.</returns>
-    public DateTime GetLastModifiedTime() => File.Exists(path) ? File.GetLastWriteTime(path) : DateTime.MinValue;
+    public DateTime GetLastModifiedTime() => Exists() ? File.GetLastWriteTime(Path) : DateTime.MinValue;
 
     /// <summary>
     /// Gets the size of the file in bytes.
