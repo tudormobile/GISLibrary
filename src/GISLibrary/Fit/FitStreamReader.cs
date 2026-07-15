@@ -23,7 +23,7 @@ public class FitStreamReader : BinaryReader
     public FitHeader Header => _fitHeader ?? ReadHeader();
 
     /// <summary>
-    /// The 'FirendlyName' field from the (optional) User Profile record
+    /// The 'FriendlyName' field from the (optional) User Profile record.
     /// </summary>
     public string FriendlyName => _friendlyName ?? DEFAULT_NAME;
 
