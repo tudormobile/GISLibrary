@@ -219,7 +219,7 @@ public class FitStreamReader : BinaryReader
         if (_fitHeader == null)
         {
             var buffer = new byte[FitHeader.MinimumSize];
-            await BaseStream.ReadExactlyAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
+            await ReadExactAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
             var header = new FitHeader(buffer);
 
             var remaining = header.HeaderSize - buffer.Length;
@@ -228,7 +228,7 @@ public class FitStreamReader : BinaryReader
                 // Advance past any additional header bytes (e.g. future extensions) via
                 // a forward-only read, since the underlying stream may not support seeking.
                 var extra = new byte[remaining];
-                await BaseStream.ReadExactlyAsync(extra.AsMemory(0, remaining), cancellationToken).ConfigureAwait(false);
+                await ReadExactAsync(extra.AsMemory(0, remaining), cancellationToken).ConfigureAwait(false);
             }
 
             _fitHeader = header;
