@@ -45,8 +45,8 @@ public static class FitBaseTypeExtensions
     /// <param name="littleEndian">Whether the bytes are encoded in little-endian byte order.</param>
     /// <returns>
     /// The decoded value as <see cref="long"/> (integer types), <see cref="ulong"/> (unsigned 64-bit),
-    /// <see cref="float"/>/<see cref="double"/> (floating point), <see cref="string"/> (string type),
-    /// or <c>null</c> if the value represents the type's "invalid" marker.
+    /// <see cref="float"/>/<see cref="double"/> (floating point), <see cref="string"/> (string type).
+    /// For non-string types, returns <c>null</c> when the value represents the type's "invalid" marker.
     /// </returns>
     public static object? Decode(this FitBaseType baseType, ReadOnlySpan<byte> data, bool littleEndian)
     {
