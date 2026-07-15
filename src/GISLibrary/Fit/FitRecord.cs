@@ -35,20 +35,20 @@ public sealed class FitRecord
     public byte? TimeOffset { get; init; }
 
     /// <summary>
-    /// The FIT global message number (per the FIT global profile) for a Definition Message.
-    /// Only populated when <see cref="MessageType"/> is <see cref="FitMessageType.Definition"/>.
+    /// The FIT global message number (per the FIT global profile).
+    /// Populated for Definition Messages, and for Data Messages after parsing based on the associated Definition Message.
     /// </summary>
     public ushort? GlobalMessageNumber { get; init; }
 
     /// <summary>
-    /// Whether the fields described by a Definition Message are encoded using little-endian byte order.
-    /// Only meaningful when <see cref="MessageType"/> is <see cref="FitMessageType.Definition"/>.
+    /// Whether this record's field bytes are encoded using little-endian byte order.
+    /// Populated for Definition Messages, and for Data Messages after parsing based on the associated Definition Message.
     /// </summary>
     public bool LittleEndian { get; init; } = true;
 
     /// <summary>
-    /// The field definitions declared by a Definition Message.
-    /// Only populated when <see cref="MessageType"/> is <see cref="FitMessageType.Definition"/>.
+    /// The field definitions that describe this record's layout.
+    /// Populated for Definition Messages, and for Data Messages after parsing based on the associated Definition Message.
     /// </summary>
     public IReadOnlyList<FitFieldDefinition>? FieldDefinitions { get; init; }
 
