@@ -32,7 +32,7 @@ public class FitFile(string path)
     /// Gets the size of the file in bytes.
     /// </summary>
     /// <returns>The file size in bytes.</returns>
-    public long GetFileSize() => File.Exists(path) ? new FileInfo(path).Length : 0L;
+    public long GetFileSize() => Exists() ? new FileInfo(Path).Length : 0L;
 
     /// <summary>
     /// Gzip magic number: the first two bytes of a gzip-compressed stream.
