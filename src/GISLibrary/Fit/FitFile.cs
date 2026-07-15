@@ -64,7 +64,7 @@ public class FitFile(string path)
     /// </summary>
     public FitStreamReader CreateReader()
     {
-        Stream stream = File.OpenRead(path);
+        Stream stream = File.OpenRead(Path);
         if (IsGZipCompressed(stream))
         {
             stream = new GZipStream(stream, CompressionMode.Decompress);
